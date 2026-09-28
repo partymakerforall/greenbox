@@ -1,0 +1,11 @@
+{
+  "name": "greenbox-local-handbook",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node tools/serve.mjs",
+    "build": "python3 tools/build.py",
+    "test": "node --test tools/server.test.mjs tools/pages.test.mjs"
+  }
+}

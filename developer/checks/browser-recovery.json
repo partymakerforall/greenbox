@@ -1,0 +1,14 @@
+{
+  "date": "2026-09-28",
+  "browser": "Headless Chrome 154.0.8037.57",
+  "packageFormat": "greenbox.wallet.package/1",
+  "shareOrder": [
+    5,
+    1,
+    3
+  ],
+  "downloadBytes": 2238,
+  "sha256": "a89fb57cb8f221b6f017d0a3bebedbacfd91dc0f2dc2f9b1a837bfbfe7f88923",
+  "matchesOriginalFixture": true,
+  "hardwareWalletUsed": false
+}

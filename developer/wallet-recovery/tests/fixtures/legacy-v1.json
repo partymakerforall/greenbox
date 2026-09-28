@@ -1,0 +1,233 @@
+{
+  "warning": "DUMMY KEYS ONLY. Never use for real funds or data. Generated before the v2 change.",
+  "invitation": {
+    "format": "greenbox.wallet.invitation/1",
+    "recoveryId": "0xfe4f031a58df406116158a4906e683b4c04addb3bef14bc91f42f6335cafcc61",
+    "label": "Fixed legacy compatibility test"
+  },
+  "members": [
+    {
+      "dummyPrivateKey": "0x0000000000000000000000000000000000000000000000000000000000000001",
+      "privateSignature": "0xbaf67093ae2e119ea2421876352e3ff4b118a5898987348c3d61a3c9cb709bc45f7d64d04350a45937ab1be84487d40a1ac6038550cccef485716d41b6fcef941c",
+      "derivedSecret": "0x5e07ce539b96cfc42ad909783299b97ef8aaa2d8b0a85016ac142ab92f811dda",
+      "card": {
+        "format": "greenbox.wallet.custodian/1",
+        "invitation": {
+          "format": "greenbox.wallet.invitation/1",
+          "recoveryId": "0xfe4f031a58df406116158a4906e683b4c04addb3bef14bc91f42f6335cafcc61",
+          "label": "Fixed legacy compatibility test"
+        },
+        "account": "0x7e5f4552091a69125d5dfcb7b8c2659029395bdf",
+        "method": "eip712",
+        "publicKey": "0x9575809bea437ec0b9568b6c7a72c0ab612c10cf739884a8864b87c3df7bac5e",
+        "proof": "0xb233f5b1ad305b101ed1123a9f81af12ff0b5c1db05d52085f9204f9f16f2ef37546169b1726dbb46dd61de61eb9c442e8268e9f0d2b978f474c0cbc8e85e1111b"
+      }
+    },
+    {
+      "dummyPrivateKey": "0x0000000000000000000000000000000000000000000000000000000000000002",
+      "privateSignature": "0x8f0ec74cbe2d70913b459116d6caceda17babdeaa00e8e126bf1afa950070d975d21ef94bc248a5f50db153ca69955a4e35ec59ca055297b02ef668a7c09736e1b",
+      "derivedSecret": "0x11e7558ec6a05b526e0c677331d3a1c4326a8f086f70923a06b81bf20a265bf4",
+      "card": {
+        "format": "greenbox.wallet.custodian/1",
+        "invitation": {
+          "format": "greenbox.wallet.invitation/1",
+          "recoveryId": "0xfe4f031a58df406116158a4906e683b4c04addb3bef14bc91f42f6335cafcc61",
+          "label": "Fixed legacy compatibility test"
+        },
+        "account": "0x2b5ad5c4795c026514f8317c7a215e218dccd6cf",
+        "method": "eip712",
+        "publicKey": "0xa7b789be78cfa0c1697d25c406dce533f0f02dc03200f1234c4ef41a367efb59",
+        "proof": "0xb6d7aa622c9145edda0054c71cdbead09db72c106fcb18faa7f054aa11a90d5c5eb253a6ded7ecb4ca0f37095a63c84587cb004bf0de2ad44fe140029b16fc3e1b"
+      }
+    },
+    {
+      "dummyPrivateKey": "0x0000000000000000000000000000000000000000000000000000000000000003",
+      "privateSignature": "0x2a5d6027df51de0415d44bdf0cc50e5d6d197d61544186d2b9cbf198eea9f312347e582e4a9f87d5936fc81b2528acd89beab1dbce6415a018797cd3456b0fe11c",
+      "derivedSecret": "0x8046f1cf8ae11550c1b23b29b2d89861c7761b918f6dd4fce70bc342b4e80792",
+      "card": {
+        "format": "greenbox.wallet.custodian/1",
+        "invitation": {
+          "format": "greenbox.wallet.invitation/1",
+          "recoveryId": "0xfe4f031a58df406116158a4906e683b4c04addb3bef14bc91f42f6335cafcc61",
+          "label": "Fixed legacy compatibility test"
+        },
+        "account": "0x6813eb9362372eef6200f3b1dbc3f819671cba69",
+        "method": "eip712",
+        "publicKey": "0xbcb8eb25e173f81f6dea0e602d06a6393c4be8b482d8202218da4cb32c773b34",
+        "proof": "0x51dd1761294315c54e1ec1a7d96c38d47b491410df02201c6b59a9881c6ec47a22037dabf84fcf264b1b6f59d5f8bb99b79cb684f2641a4b8d73dd3b1d3ae2f11b"
+      }
+    },
+    {
+      "dummyPrivateKey": "0x0000000000000000000000000000000000000000000000000000000000000004",
+      "privateSignature": "0x0e4ef1a8cf87dd4b3c0bf91ea8f355d499b4263a1d44bfb25a6f9f8e5b5deb9a5f4a6714287a65567d3bce47939b79d6c399c61a4e3e9f048354a7d19045a0211b",
+      "derivedSecret": "0x9c9c6de703b43f9becad466c25eb54532e79568bca1abd4fab91288f50083539",
+      "card": {
+        "format": "greenbox.wallet.custodian/1",
+        "invitation": {
+          "format": "greenbox.wallet.invitation/1",
+          "recoveryId": "0xfe4f031a58df406116158a4906e683b4c04addb3bef14bc91f42f6335cafcc61",
+          "label": "Fixed legacy compatibility test"
+        },
+        "account": "0x1eff47bc3a10a45d4b230b5d10e37751fe6aa718",
+        "method": "eip712",
+        "publicKey": "0x397f4db81b31edd236fb3b0ddff1272101166cda6ccef19ebafe4b895ae79a79",
+        "proof": "0x955b739c9001f0d46f25f808602e9ab35ae173f8be62ec3847d607ea0038cd791aec459321e171a936a3e6b01eaf794a1ef1ea56794f2b5b4dc3dd1042dc2e891b"
+      }
+    },
+    {
+      "dummyPrivateKey": "0x0000000000000000000000000000000000000000000000000000000000000005",
+      "privateSignature": "0x50336c05619023d2615cc3403bdf99a3eb56f016ba2e9183f8690451f935ca8407cea2b05b2072cb8ac68ff2d0d30ad588eb789699123491111d8a69e63c60071c",
+      "derivedSecret": "0x8b16a18d5ea45737e2ad7d8909705848a7a944c0e31dc2c07f4bace5d13c0871",
+      "card": {
+        "format": "greenbox.wallet.custodian/1",
+        "invitation": {
+          "format": "greenbox.wallet.invitation/1",
+          "recoveryId": "0xfe4f031a58df406116158a4906e683b4c04addb3bef14bc91f42f6335cafcc61",
+          "label": "Fixed legacy compatibility test"
+        },
+        "account": "0xe1ab8145f7e55dc933d51a18c793f901a3a0b276",
+        "method": "personal_sign",
+        "publicKey": "0xe8e74bc09d02cb98aadbe1c57e9bf50ea9cbe446d9f27bcf44c41855791dc148",
+        "proof": "0x726daded41fefda0fbcaf8cd200cfd3463e680123d26aa5a6f8b5a4f4463ff9220ef81a5710df4545f59894b4db4cde047839359793769465e886d8c4789032d1c"
+      }
+    }
+  ],
+  "package": {
+    "format": "greenbox.wallet.package/1",
+    "header": {
+      "suite": "X25519-HKDF-SHA256-AES256GCM-SSS-GF256-v1",
+      "invitation": {
+        "format": "greenbox.wallet.invitation/1",
+        "recoveryId": "0xfe4f031a58df406116158a4906e683b4c04addb3bef14bc91f42f6335cafcc61",
+        "label": "Fixed legacy compatibility test"
+      },
+      "threshold": 3,
+      "recipients": [
+        {
+          "format": "greenbox.wallet.custodian/1",
+          "invitation": {
+            "format": "greenbox.wallet.invitation/1",
+            "recoveryId": "0xfe4f031a58df406116158a4906e683b4c04addb3bef14bc91f42f6335cafcc61",
+            "label": "Fixed legacy compatibility test"
+          },
+          "account": "0x7e5f4552091a69125d5dfcb7b8c2659029395bdf",
+          "method": "eip712",
+          "publicKey": "0x9575809bea437ec0b9568b6c7a72c0ab612c10cf739884a8864b87c3df7bac5e",
+          "proof": "0xb233f5b1ad305b101ed1123a9f81af12ff0b5c1db05d52085f9204f9f16f2ef37546169b1726dbb46dd61de61eb9c442e8268e9f0d2b978f474c0cbc8e85e1111b"
+        },
+        {
+          "format": "greenbox.wallet.custodian/1",
+          "invitation": {
+            "format": "greenbox.wallet.invitation/1",
+            "recoveryId": "0xfe4f031a58df406116158a4906e683b4c04addb3bef14bc91f42f6335cafcc61",
+            "label": "Fixed legacy compatibility test"
+          },
+          "account": "0x2b5ad5c4795c026514f8317c7a215e218dccd6cf",
+          "method": "eip712",
+          "publicKey": "0xa7b789be78cfa0c1697d25c406dce533f0f02dc03200f1234c4ef41a367efb59",
+          "proof": "0xb6d7aa622c9145edda0054c71cdbead09db72c106fcb18faa7f054aa11a90d5c5eb253a6ded7ecb4ca0f37095a63c84587cb004bf0de2ad44fe140029b16fc3e1b"
+        },
+        {
+          "format": "greenbox.wallet.custodian/1",
+          "invitation": {
+            "format": "greenbox.wallet.invitation/1",
+            "recoveryId": "0xfe4f031a58df406116158a4906e683b4c04addb3bef14bc91f42f6335cafcc61",
+            "label": "Fixed legacy compatibility test"
+          },
+          "account": "0x6813eb9362372eef6200f3b1dbc3f819671cba69",
+          "method": "eip712",
+          "publicKey": "0xbcb8eb25e173f81f6dea0e602d06a6393c4be8b482d8202218da4cb32c773b34",
+          "proof": "0x51dd1761294315c54e1ec1a7d96c38d47b491410df02201c6b59a9881c6ec47a22037dabf84fcf264b1b6f59d5f8bb99b79cb684f2641a4b8d73dd3b1d3ae2f11b"
+        },
+        {
+          "format": "greenbox.wallet.custodian/1",
+          "invitation": {
+            "format": "greenbox.wallet.invitation/1",
+            "recoveryId": "0xfe4f031a58df406116158a4906e683b4c04addb3bef14bc91f42f6335cafcc61",
+            "label": "Fixed legacy compatibility test"
+          },
+          "account": "0x1eff47bc3a10a45d4b230b5d10e37751fe6aa718",
+          "method": "eip712",
+          "publicKey": "0x397f4db81b31edd236fb3b0ddff1272101166cda6ccef19ebafe4b895ae79a79",
+          "proof": "0x955b739c9001f0d46f25f808602e9ab35ae173f8be62ec3847d607ea0038cd791aec459321e171a936a3e6b01eaf794a1ef1ea56794f2b5b4dc3dd1042dc2e891b"
+        },
+        {
+          "format": "greenbox.wallet.custodian/1",
+          "invitation": {
+            "format": "greenbox.wallet.invitation/1",
+            "recoveryId": "0xfe4f031a58df406116158a4906e683b4c04addb3bef14bc91f42f6335cafcc61",
+            "label": "Fixed legacy compatibility test"
+          },
+          "account": "0xe1ab8145f7e55dc933d51a18c793f901a3a0b276",
+          "method": "personal_sign",
+          "publicKey": "0xe8e74bc09d02cb98aadbe1c57e9bf50ea9cbe446d9f27bcf44c41855791dc148",
+          "proof": "0x726daded41fefda0fbcaf8cd200cfd3463e680123d26aa5a6f8b5a4f4463ff9220ef81a5710df4545f59894b4db4cde047839359793769465e886d8c4789032d1c"
+        }
+      ],
+      "packageId": "0xbbeba9e14b7a5366f7c7818033073351d946f4603c3c3071f957820047dfbd29",
+      "file": {
+        "name": "legacy-test.txt",
+        "size": 66,
+        "mime": "application/octet-stream"
+      }
+    },
+    "payload": {
+      "iv": "RtRusKW88T07KK0R",
+      "ciphertext": "Q6H84xMOOyBJCtUFf4F7djJseNS57wepqf8upRP/jvm8Oq/5z0AfEcB+Me0gB6KiO7YSGv1VFVuiRDc8DtJ0ep1LBkmpD5pKI/iXr0+UyevOKg=="
+    },
+    "wrapped": [
+      {
+        "index": 1,
+        "ephemeralKey": "0xc36a9f9a587da51f8da3f31814d69a24c5f7360cf501f09b90d0f368ec0a793d",
+        "commitment": "0x3b6a75ce386b3cfd398913921b10130d792447747f48131558ed707346c5ef60",
+        "sealed": {
+          "iv": "o0/ZLDuLMYFDMQE3",
+          "ciphertext": "Zfpd2GreQdRK6/UcobyjgFypUKxiPH5s+ahft8AZ3BY6ZvGcrkPbr8h52kifcSaF9g=="
+        }
+      },
+      {
+        "index": 2,
+        "ephemeralKey": "0x92d64a02f77153a8770f4c75fb5273042a8611c91daeb9e1398af8357df27718",
+        "commitment": "0x4bda18f27d2039e852bf624a3e1d18b6cd108d830409ae05e63343de9352fe95",
+        "sealed": {
+          "iv": "GFGIuzH4PgAKHoaZ",
+          "ciphertext": "TkCFoCrVLaxBMESB8gxOeCo/Gi/EJXIEyyEWUwOfno/LlGSJMFQpLiW8PI454DJC1A=="
+        }
+      },
+      {
+        "index": 3,
+        "ephemeralKey": "0x3cfd623573c70cc23cdd70c42a6998c8dae45fe9fb75d3119767e57df256ab25",
+        "commitment": "0x4dea7e2a5e41cfb53de5ee9907098a07556802bc10398455796368ecbadaabfb",
+        "sealed": {
+          "iv": "0+eMXatx5pdaLmvn",
+          "ciphertext": "OdVie2a5vo017zx0vrQbNC2esIZP0ioqUtbh2mguolf5Fb/hFMA7Hd+zDZOOCnsNaQ=="
+        }
+      },
+      {
+        "index": 4,
+        "ephemeralKey": "0xe93e5d3c6e5845160d383e34765a8b92ed15afe0ef8eb21d030b4e414fc52d24",
+        "commitment": "0x8822c0cc9629bfc1bb93b547bffb07870883b893002f88848387d6cc49033764",
+        "sealed": {
+          "iv": "FZ0eSugXiTWxFmUy",
+          "ciphertext": "dq63C8kc32U4wYW7xr4qGCBUvmc0MhQP+Ci21ef7EOQbpi2nNThgrf5TGyAGXf/7WQ=="
+        }
+      },
+      {
+        "index": 5,
+        "ephemeralKey": "0x83271548ce2a865af115a5e1add3bacc4a9a270a2d84714228c7a5525399ea53",
+        "commitment": "0x6f62ce3470954c0fad7e8e9c82d277f9b6b4a5f3b72f2e3623bfaa1283f8753b",
+        "sealed": {
+          "iv": "+fvCtWSdtNAIuSDZ",
+          "ciphertext": "LFB4mHkQ085UuI6ykvs+ohlBhSlI2rubkWum1n2/lPV3WwUWAH1OdC7+FcaHyfmgeA=="
+        }
+      }
+    ]
+  },
+  "receipt": {
+    "format": "greenbox.wallet.receipt/1",
+    "packageId": "0xbbeba9e14b7a5366f7c7818033073351d946f4603c3c3071f957820047dfbd29",
+    "recoveryId": "0xfe4f031a58df406116158a4906e683b4c04addb3bef14bc91f42f6335cafcc61",
+    "fingerprint": "0x1246cf7829b62666ebecb2584de9258dd049bd7c273f0a9403a70dedc65038b5"
+  },
+  "plaintext": "Greenbox legacy v1 compatibility fixture — disposable data only."
+}

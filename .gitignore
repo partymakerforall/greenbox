@@ -1,0 +1,39 @@
+# Local tools and generated test clutter
+node_modules/
+.npm-cache/
+__pycache__/
+*.pyc
+.DS_Store
+*.log
+.venv/
+coverage/
+/_site/
+
+# Credentials and personal recovery material
+.env
+.env.*
+!.env.example
+credentials.json
+private/
+kit/
+restored/
+restored-*/
+*.key
+*.keyx
+*.pem
+*.p12
+*.kdb
+*.kdbx
+*.age
+*.minisig
+*.tar
+*.tar.gz
+UNLOCK.txt
+BACKUP-INFO.txt
+greenbox-package.json
+greenbox-receipt.json
+greenbox-public-key-*.json
+greenbox-SECRET-share-*.json
+
+# Public, disposable compatibility fixtures are part of the tests.
+!developer/wallet-recovery/tests/fixtures/legacy-downloads/*.json

@@ -1,0 +1,12 @@
+{
+  "file": "recovery.html",
+  "profile": "production",
+  "applicationModules": [
+    "src/app.mjs",
+    "src/crypto.mjs",
+    "src/wallet.mjs"
+  ],
+  "bytes": 145681,
+  "sha256": "872fd5ee1364d9bd4bc5d5e0ad485ebc512dd1bd73d938328a9086fadf267aa4",
+  "externalRuntimeDependencies": 0
+}

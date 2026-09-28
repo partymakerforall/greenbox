@@ -1,0 +1,44 @@
+[
+  {
+    "width": 320,
+    "routes": 37,
+    "diagrams": 7,
+    "failures": [],
+    "remoteResources": []
+  },
+  {
+    "width": 390,
+    "routes": 37,
+    "diagrams": 7,
+    "failures": [],
+    "remoteResources": []
+  },
+  {
+    "width": 768,
+    "routes": 37,
+    "diagrams": 7,
+    "failures": [],
+    "remoteResources": []
+  },
+  {
+    "width": 1024,
+    "routes": 37,
+    "diagrams": 7,
+    "failures": [],
+    "remoteResources": []
+  },
+  {
+    "width": 1440,
+    "routes": 37,
+    "diagrams": 7,
+    "failures": [],
+    "remoteResources": []
+  },
+  {
+    "width": 1920,
+    "routes": 37,
+    "diagrams": 7,
+    "failures": [],
+    "remoteResources": []
+  }
+]

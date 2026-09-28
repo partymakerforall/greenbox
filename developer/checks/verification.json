@@ -1,0 +1,39 @@
+{
+  "date": "2026-09-28",
+  "browser": "Headless Chrome 154.0.8037.57",
+  "handbookRoutes": 37,
+  "viewportWidths": [
+    320,
+    390,
+    768,
+    1024,
+    1440,
+    1920
+  ],
+  "walletTestsPassed": 40,
+  "serverTestsPassed": 4,
+  "recoveryPage": {
+    "path": "/tool",
+    "secureContext": true,
+    "webCryptoAvailable": true,
+    "views": 3,
+    "initialError": null
+  },
+  "runtimeExternalDependencies": 0,
+  "diagramImages": {
+    "placements": 7,
+    "uniqueImages": 6,
+    "embeddedInHtml": true,
+    "offlineFileLoadingVerified": true,
+    "desktopAndMobileViewerVerified": true,
+    "actualSizeZoomVerified": true,
+    "keyboardOpenAndEscapeVerified": true
+  },
+  "cryptographicImplementationUnchanged": true,
+  "compatibilityFixturesPreserved": true,
+  "dependencyInstallNeededForNormalUse": false,
+  "repositoryAudit": "docs/REPOSITORY-AUDIT.md",
+  "repositoryLayout": "root",
+  "localServerRootFilesVerified": true,
+  "pagesTestsPassed": 3
+}

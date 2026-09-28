@@ -1,0 +1,20 @@
+{
+  "guide_sha256": "3f865b036ef18bd5dc89ae09058747e8fa55aba6c64aca741e1417940f1f1cc8",
+  "guided_pages": 13,
+  "reference_documents": 4,
+  "source_sha256": {
+    "docs/OWNER-REFERENCE.md": "6ecbc4d5b9906c11dc03d1266504067090e5302b933c98ca645f31919623b832",
+    "docs/PROTOCOL.md": "520b41e81bdaae0a9ec3caaa76407761e15eaafbc79c550629f9c31ba12a71cc",
+    "docs/VERIFICATION.md": "22df3291db3acdc956836f6015cefc422edfc3ede833c8f668647a6b17988307",
+    "docs/THIRD-PARTY-NOTICES.md": "46cd79d8c19767d741267c05fb651a8fb2cc363082859e3cb0f2e52e1a284427"
+  },
+  "diagram_placements": 7,
+  "diagram_sha256": {
+    "backup-kit.png": "addb80d49377b865a7585dd49871d18e57782dba510bb08ea75e94d9e4c51c3c",
+    "cards-and-shares.png": "401b8bd7f5b33d54d0b44bb72011e1d405e8774f9158eb537d0ffc3fd50726f6",
+    "owner-recovery.png": "e564e70368836551ad129811497bb7fae053faf7f08d81284151b7fd6b6896b4",
+    "pack-and-protect.png": "9ebe50719abf8158040ef19d764831995fbcbcd43ccb75a0b604acb00ab7b9c1",
+    "two-routes.png": "207e85188efe8833dbf091b26f86278ae06c5af2afd350fb051c20dd24b2a30d",
+    "wallet-protocol.png": "6473e6cfa1c78fa589040143e3eb13720f6c7097a427d4d9e3e9a60d01076d28"
+  }
+}

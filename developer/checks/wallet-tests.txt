@@ -1,0 +1,210 @@
+TAP version 13
+# Subtest: the shipped HTML excludes sample data, simulated wallets and testing controls
+ok 1 - the shipped HTML excludes sample data, simulated wallets and testing controls
+  ---
+  duration_ms: 171.603209
+  ...
+# Subtest: all ten groups of three recover the actual dummy KeePass bytes in every order
+ok 2 - all ten groups of three recover the actual dummy KeePass bytes in every order
+  ---
+  duration_ms: 845.3125
+  ...
+# Subtest: every group of one or two is rejected
+ok 3 - every group of one or two is rejected
+  ---
+  duration_ms: 189.949292
+  ...
+# Subtest: four and five valid contributions also recover
+ok 4 - four and five valid contributions also recover
+  ---
+  duration_ms: 26.761917
+  ...
+# Subtest: duplicate shares cannot satisfy the threshold
+ok 5 - duplicate shares cannot satisfy the threshold
+  ---
+  duration_ms: 13.938916
+  ...
+# Subtest: tampering with encrypted payload fails receipt validation
+ok 6 - tampering with encrypted payload fails receipt validation
+  ---
+  duration_ms: 14.718125
+  ...
+# Subtest: wrong share contents fail their commitment check
+ok 7 - wrong share contents fail their commitment check
+  ---
+  duration_ms: 13.405833
+  ...
+# Subtest: AES-GCM rejects tampered payload even if an attacker supplies a replacement receipt
+ok 8 - AES-GCM rejects tampered payload even if an attacker supplies a replacement receipt
+  ---
+  duration_ms: 15.124208
+  ...
+# Subtest: AEAD rejects modified encrypted shares even with a replacement receipt
+ok 9 - AEAD rejects modified encrypted shares even with a replacement receipt
+  ---
+  duration_ms: 16.34825
+  ...
+# Subtest: base64 validates large backups without a repeated-group regex stack overflow
+ok 10 - base64 validates large backups without a repeated-group regex stack overflow
+  ---
+  duration_ms: 186.845291
+  ...
+# Subtest: changing the threshold cannot make two shares sufficient
+ok 11 - changing the threshold cannot make two shares sufficient
+  ---
+  duration_ms: 13.493917
+  ...
+# Subtest: share and receipt from another package are rejected
+ok 12 - share and receipt from another package are rejected
+  ---
+  duration_ms: 61.400417
+  ...
+# Subtest: wrong derived private key cannot decrypt someone else’s share
+ok 13 - wrong derived private key cannot decrypt someone else’s share
+  ---
+  duration_ms: 12.895042
+  ...
+# Subtest: public registration proof rejects a substituted encryption public key
+ok 14 - public registration proof rejects a substituted encryption public key
+  ---
+  duration_ms: 2.760334
+  ...
+# Subtest: duplicate account and duplicate encryption key registrations are rejected
+ok 15 - duplicate account and duplicate encryption key registrations are rejected
+  ---
+  duration_ms: 8.622875
+  ...
+# Subtest: a restored software wallet derives exactly the same key for each signing method
+ok 16 - a restored software wallet derives exactly the same key for each signing method
+  ---
+  duration_ms: 28.943167
+  ...
+# Subtest: signing method and recovery ID are separate derivation contexts
+ok 17 - signing method and recovery ID are separate derivation contexts
+  ---
+  duration_ms: 5.553541
+  ...
+# Subtest: an ordinary registration signature cannot be used as the private derivation signature
+ok 18 - an ordinary registration signature cannot be used as the private derivation signature
+  ---
+  duration_ms: 1.805666
+  ...
+# Subtest: r/s normalization gives one encoding for high-s and v=0/1 equivalents
+ok 19 - r/s normalization gives one encoding for high-s and v=0/1 equivalents
+  ---
+  duration_ms: 0.208667
+  ...
+# Subtest: invalid signatures and unsupported protocol versions fail closed
+ok 20 - invalid signatures and unsupported protocol versions fail closed
+  ---
+  duration_ms: 1.791417
+  ...
+# Subtest: exported public artifacts contain no private derivation signatures or private keys
+ok 21 - exported public artifacts contain no private derivation signatures or private keys
+  ---
+  duration_ms: 0.29
+  ...
+# Subtest: a wallet creates its reusable card without an invitation in either signing method
+ok 22 - a wallet creates its reusable card without an invitation in either signing method
+  ---
+  duration_ms: 40.239042
+  ...
+# Subtest: creating the same reusable card again gives the same key; method remains significant
+ok 23 - creating the same reusable card again gives the same key; method remains significant
+  ---
+  duration_ms: 20.14775
+  ...
+# Subtest: successive releases and different thresholds reuse the exact cards without wallet calls
+ok 24 - successive releases and different thresholds reuse the exact cards without wallet calls
+  ---
+  duration_ms: 123.506917
+  ...
+# Subtest: v2 recovers the genuine KeePass bytes for all 60 three-of-five combinations and orders
+ok 25 - v2 recovers the genuine KeePass bytes for all 60 three-of-five combinations and orders
+  ---
+  duration_ms: 818.209541
+  ...
+# Subtest: v2 rejects one or two shares, duplicates and incorrect private keys
+ok 26 - v2 rejects one or two shares, duplicates and incorrect private keys
+  ---
+  duration_ms: 219.171125
+  ...
+# Subtest: unchanged legacy v1 vectors still reproduce signatures, keys and the original encrypted file
+ok 27 - unchanged legacy v1 vectors still reproduce signatures, keys and the original encrypted file
+  ---
+  duration_ms: 112.874709
+  ...
+# Subtest: previously downloaded real dummy v1 package and contributions remain recoverable
+ok 28 - previously downloaded real dummy v1 package and contributions remain recoverable
+  ---
+  duration_ms: 14.872083
+  ...
+# Subtest: legacy public cards from different invitations mix with new cards without new enrollment
+ok 29 - legacy public cards from different invitations mix with new cards without new enrollment
+  ---
+  duration_ms: 103.108167
+  ...
+# Subtest: v2 private signatures and public proofs have distinct domains; secrets are never exported
+ok 30 - v2 private signatures and public proofs have distinct domains; secrets are never exported
+  ---
+  duration_ms: 8.334417
+  ...
+# Subtest: v1 and reusable signatures cannot be silently exchanged
+ok 31 - v1 and reusable signatures cannot be silently exchanged
+  ---
+  duration_ms: 4.397833
+  ...
+# Subtest: unknown or relabeled card, scheme, package and receipt versions fail closed
+ok 32 - unknown or relabeled card, scheme, package and receipt versions fail closed
+  ---
+  duration_ms: 20.113625
+  ...
+# Subtest: v2 rejects tampered public metadata and AEAD rejects modified ciphertext despite a replacement receipt
+ok 33 - v2 rejects tampered public metadata and AEAD rejects modified ciphertext despite a replacement receipt
+  ---
+  duration_ms: 38.713583
+  ...
+# Subtest: enrollment uses two private signatures and a distinct public registration proof
+ok 34 - enrollment uses two private signatures and a distinct public registration proof
+  ---
+  duration_ms: 105.115209
+  ...
+# Subtest: hardware-compatible personal_sign is explicit and does not silently change methods
+ok 35 - hardware-compatible personal_sign is explicit and does not silently change methods
+  ---
+  duration_ms: 16.347667
+  ...
+# Subtest: user rejection stops immediately without a fallback or repeated signing
+ok 36 - user rejection stops immediately without a fallback or repeated signing
+  ---
+  duration_ms: 4.232375
+  ...
+# Subtest: an account change during a signing request aborts
+ok 37 - an account change during a signing request aborts
+  ---
+  duration_ms: 8.073416
+  ...
+# Subtest: wrong chain aborts EIP-712 without switching networks automatically
+ok 38 - wrong chain aborts EIP-712 without switching networks automatically
+  ---
+  duration_ms: 3.483417
+  ...
+# Subtest: different signatures for one message fail repeatability even when both are valid
+ok 39 - different signatures for one message fail repeatability even when both are valid
+  ---
+  duration_ms: 33.365917
+  ...
+# Subtest: EIP-6963 discovery separates providers and discards duplicate announcements
+ok 40 - EIP-6963 discovery separates providers and discards duplicate announcements
+  ---
+  duration_ms: 7.446667
+  ...
+1..40
+# tests 40
+# suites 0
+# pass 40
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1916.094291
