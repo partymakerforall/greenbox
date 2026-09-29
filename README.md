@@ -4,19 +4,19 @@ A local handbook and recovery tool for encrypted KeePass backups.
 
 [Open the online demo](https://partymakerforall.github.io/greenbox/) · [Recovery tool](https://partymakerforall.github.io/greenbox/recovery.html)
 
-Your passphrase recovers the keys that open your backup. The optional heirs route lets a chosen group—such as any 3 of 5 custodians—recover those keys using saved post-quantum age keys. Each heir sends you a public `.recipient` file once and keeps their private `.key` file. Reuse the public recipients for later backups.
+Your passphrase recovers the keys that open your backup. The optional heirs route lets a chosen group—such as any 3 of 5 custodians—recover those keys using saved post-quantum age keys. Each heir sends you a public `.recipient` file once and keeps their private `.key` file. Reuse the public recipients for later backups. There is one encrypted backup and one small encrypted share per heir; any three distinct shares recover it in any order.
 
-## Open Greenbox
+## Download and open
 
-With Node.js installed, run this from the repository folder:
+Get **greenbox-v2.1.0.html** from [GitHub Releases](https://github.com/partymakerforall/greenbox/releases/latest). It contains the full handbook, diagrams, and recovery tool. Open the file directly in your browser; it works offline and needs no local server.
+
+Keep this versioned file with your recovery materials. `SHA256SUMS` on the release page lets you check the downloaded bytes. On a Mac, put both files in the same folder and run:
 
 ```sh
-node developer/guide/tools/serve.mjs
+shasum -a 256 -c SHA256SUMS
 ```
 
-Open [127.0.0.1:8788](http://127.0.0.1:8788/). Keep the terminal open; **Control-C** stops the server. No dependency installation is needed to use the built pages.
-
-To read the handbook offline, open [index.html](index.html) directly. Use the local server for the recovery tool.
+For a repository checkout, run `node developer/guide/tools/serve.mjs` and open [127.0.0.1:8788](http://127.0.0.1:8788/). No dependency installation is needed to use the built pages.
 
 ## Files
 

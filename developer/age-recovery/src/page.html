@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="greenbox-version" content="__VERSION__">
   <meta name="referrer" content="no-referrer">
   <meta http-equiv="Content-Security-Policy" content="__CSP__">
   <title>Greenbox · Age recovery</title>
@@ -63,7 +64,7 @@ age -d -i heir.key -o share-1.json share-1.age</pre><p>Use the number in your do
     </section>
   </main>
   <section id="notes" class="notes" hidden><div class="notes-title"><span class="eyebrow">HOW IT WORKS</span><button id="hide-notes" class="text-button">Close ×</button></div><h2>Saved keys. Shared recovery.</h2><div class="notes-grid"><div><h3>One key, future backups</h3><p>Each heir creates an age key once and backs it up. The creator reuses its public recipient. Every new package gets a fresh random file key and fresh shares.</p><h3>Three different shares</h3><p>AES-256-GCM encrypts the file. Shamir splits the file key. Each share is encrypted separately to one heir using age’s ML-KEM-768 + X25519 hybrid scheme. Adding several recipients to one age file alone would let any one of them open it.</p><h3>Files stay in your browser</h3><p>No uploads, external scripts, analytics, or browser storage. Private inputs remain in memory until cleared or the page closes. JavaScript cannot guarantee complete memory erasure.</p></div><div><h3>Security limits</h3><p>This integration has not had an independent security audit. The share envelopes use post-quantum age recipients, but age’s internal file keys are 128-bit. The separate owner passphrase and minisign routes have their own security limits.</p><h3>Trust and key loss</h3><p>Verify public key fingerprints with the intended heirs. Keep the receipt through a trusted route; it is a fingerprint, not an owner signature. A lost private key cannot be recreated from its public recipient.</p><p>A leaked heir key can open that heir’s shares in every package using it. Any threshold of heirs can cooperate at any time. Replacing keys does not revoke old packages.</p></div></div><p class="micro">Older wallet packages need the previous release. <a href="index.html#help!legacy-recovery">Legacy recovery instructions →</a></p></section>
-  <footer><span>Greenbox / Research edition 03</span><span>Public recipients for setup. Secret shares for recovery.</span></footer>
+  <footer><span>Greenbox v__VERSION__</span><span>Public recipients for setup. Secret shares for recovery.</span></footer>
   <noscript>This local tool requires JavaScript for encryption and recovery.</noscript>
   <script>__SCRIPT__</script>
 </body>

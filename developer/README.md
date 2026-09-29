@@ -8,6 +8,7 @@ For normal use, follow the [repository README](../README.md). The handbook and l
 |---|---|
 | `guide/` | Handbook content, styles, builder, and the shared local server |
 | `age-recovery/` | Recovery application source and automated tests |
+| `release/` | Standalone HTML builder, wrapper, and release tests |
 | `docs/` | Current extended references, included in the HTML handbook |
 | `checks/` | Latest build hashes and verification results |
 
@@ -64,3 +65,18 @@ It uses a separate tab and closes that tab afterward. `age-recovery/tools/browse
 `make pages` stages only `index.html`, `recovery.html`, and `.nojekyll` in the ignored `_site/` folder. It never publishes the repository directory. Relative links work under `/greenbox/` as well as on the local server.
 
 The repository's Pages source must be **GitHub Actions**. The demo URL is https://partymakerforall.github.io/greenbox/. Real backup work should use a trusted local copy.
+
+## Versioned GitHub releases
+
+The version in `age-recovery/package.json` is the release version. Keep its lockfile root version in sync. `make release` builds both production pages and packages `_releases/greenbox-v<version>.html`, `SHA256SUMS`, and release notes. The HTML embeds the complete production recovery page and handbook; it requests no runtime resources.
+
+To publish a new version, update the version and docs, run `make check` and `make release`, test the downloaded file offline, then commit and push main. Create and push the matching annotated tag, for example:
+
+```sh
+git tag -a v2.1.0 -m 'Greenbox v2.1.0'
+git push origin v2.1.0
+```
+
+The tag workflow checks the version matches, runs all verification, and publishes the HTML plus checksum as GitHub Release assets. Existing releases are not overwritten: use a new version for changes. The main branch separately updates GitHub Pages.
+
+The release wrapper uses an embedded document with the original production CSP plus the outer document’s exact script/style hashes. Handbook links stay inside the downloaded file. Returning to the guide keeps the recovery session in memory; **Clear session** or closing the file discards it.

@@ -50,6 +50,8 @@ Use `verify.pub` to check the vault's signature, then `master.key` to decrypt it
 
 The heirs package protects the **same recovery keys**. Its encryption key is split into five shares, one protected for each custodian. Any three custodians can release their shares and recover the bundle, in any order.
 
+**One encrypted backup, five small encrypted shares.** There is no separate backup for every possible group of three.
+
 Each custodian creates an age key once, keeps its private file, and sends you its public recipient. You reuse those recipients for future backups.
 
 [Set up your heirs →](#heirs)
@@ -311,7 +313,7 @@ On your prepared offline computer, open **Build a package**:
 4. Click **Encrypt recovery package**.
 5. Download the package and receipt into `kit/`.
 
-The tool encrypts the bundle once, splits its encryption key into five shares, and encrypts each share to one custodian. Any three can recover it in any order.
+The tool encrypts the bundle once, splits its encryption key into five shares, and encrypts each share to one custodian. Any three can recover it in any order. You do not create different backups for different combinations.
 
 <div class="checkpoint"><strong>Result</strong><p>greenbox-package.json and its matching greenbox-receipt.json.</p></div>
 

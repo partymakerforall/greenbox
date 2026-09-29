@@ -38,3 +38,6 @@ greenbox-SECRET-share-*.json
 # Local heir exports
 *.recipient
 share-*.json
+
+# Versioned standalone release artifacts
+/_releases/

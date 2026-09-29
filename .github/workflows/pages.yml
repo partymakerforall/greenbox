@@ -1,8 +1,9 @@
-name: Verify and deploy Pages
+name: Verify, deploy Pages and release
 
 on:
   push:
     branches: [main]
+    tags: ['v*']
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -41,10 +42,23 @@ jobs:
         run: make check
       - name: Audit dependencies
         run: make audit
+      - name: Build the standalone release
+        env:
+          RELEASE_TAG: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || '' }}
+        run: |
+          if [ -z "$RELEASE_TAG" ]; then unset RELEASE_TAG; fi
+          node developer/release/build.mjs
+      - name: Upload versioned release files
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: standalone-release
+          path: _releases/
+          if-no-files-found: error
       - name: Package the two public pages
         run: make pages
       - name: Upload Pages artifact
-        if: github.event_name != 'pull_request'
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
         with:
           path: _site
@@ -66,3 +80,24 @@ jobs:
       - name: Deploy Pages
         id: deployment
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
+
+  release:
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    needs: verify
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: standalone-release
+          path: release
+      - name: Publish the versioned HTML and checksum
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$RELEASE_TAG" release/greenbox-*.html release/SHA256SUMS \
+            --repo "$GITHUB_REPOSITORY" --verify-tag --title "Greenbox $RELEASE_TAG" \
+            --notes-file release/RELEASE-NOTES.md
