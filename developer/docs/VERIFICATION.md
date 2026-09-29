@@ -1,42 +1,29 @@
 # Verification and acceptance
 
-Project cleanup: 25 September 2026. The current build uses reusable wallet-derived public cards. No invitation file is needed for new setup or routine backup updates.
+Updated 28 September 2026 for saved post-quantum age heir keys. The wallet derivation scheme is retired. No invitation is needed for setup or updates.
 
-## Repeatable software checks
+## Automated tests
 
-The retained wallet suite contains 40 tests. It covers every group of three out of five, in every order, in both package formats; reusable cards across backups; older saved files; invalid inputs; tampering; wrong wallets; and exclusion of test fixtures from the production page.
+The recovery suite has 14 tests, including all 60 groups/orders for 3-of-5 recovery; 2-of-2 and 10-of-10; the full 32 MiB limit; key reuse across independent packages; wrong keys; modified receipts, metadata, shares and envelopes; rejection of classical recipients; and production exclusion of test fixtures and wallet APIs.
 
-The server tests check the allowed pages, private-path rejection, foreign Host headers, upload rejection, and safe errors. Handbook checks validate internal links, command syntax, and inline script/style integrity. Browser layout checks visit every page and step at six screen widths.
+Interoperability checks use age 1.3.1: every browser-generated age envelope decrypts in the Go CLI, CLI-generated post-quantum keys work in the browser implementation, and CLI-encrypted share envelopes open in the browser implementation.
 
-Current machine-readable results and exact build hashes are in `developer/checks/`. Instructions to repeat the checks are in `developer/README.md`. Those files are local development records, not an independent audit or trusted signature on the software.
+`make check` also rebuilds both pages, tests the local server and GitHub Pages packaging, checks command syntax and internal links, verifies Content Security Policy hashes, and checks all seven embedded diagram placements. Exact outputs are retained in `developer/checks/`.
 
-## Earlier recovery rehearsals
+## Browser acceptance
 
-The owner route recovered a disposable KeePass database, and the user opened it and read its stored challenge. A wallet recovery also recovered the full bundle, followed by minisign verification, age decryption, and opening the database. A headless browser recovered a saved dummy package and shares; its downloaded database opened in KeePassXC.
+The headless rehearsal uses the built production page and disposable keys generated with the age CLI. It checks saved-key matching, private-key rejection in the public input, five-recipient package creation, actual downloads, recovery after a reload, the trusted-receipt gate, share release, and byte-for-byte recovery of a dummy KeePass database. Layout checks cover the handbook at 320, 390, 768, 1024, 1440, and 1920 pixels.
 
-These are historical results from the earlier project. Old practice kits, passwords, screenshots, and duplicate records were removed during cleanup. The fixtures needed for repeatable automated compatibility tests remain only in the development tests.
+The developer/checks folder records the current browser and layout results. Test helpers and the public dummy database stay in developer files and never enter the production bundle or Pages artifact.
 
-## What has not been established
+## What remains personal
 
-- Physical Trezor Safe 3, 5, or 7 signing and restored-wallet compatibility.
-- Recovery using your real database, key files, and other unlock requirements.
-- Availability and independence of your intended custodians.
-- Retrieval of your complete kit using only a remembered name.
-- Independent security review of the signature-derived-key integration.
+- Each heir restores a saved key from their own protected backup and matches its recipient.
+- Any three intended heirs complete recovery and open your actual KeePass database using the recovered unlock instructions and any required key file.
+- Two physical copies contain complete matching kits and working offline tools.
+- The chosen Mac, Linux or Tails environment supports your complete workflow.
+- Public discovery finds every required encrypted file without remembered logins, if you adopt that storage route.
 
-The wallet route is classical cryptography. Any sufficient group of custodians can recover at any time; no inheritance date is enforced. Old published packages and previously released shares cannot be revoked by creating a new backup.
+Earlier owner rehearsals recovered a dummy database that the user opened. They do not establish that a future real kit, hardware setup, or public storage arrangement works. Repeat the full drill after changing recovery keys or custodians, and periodically thereafter.
 
-## Acceptance checklist for your own backup
-
-- Recover the owner route from saved encrypted files in a fresh private folder.
-- Verify the vault signature with the key recovered from the trusted owner bundle.
-- Open the recovered KeePass database using only recovered unlock information.
-- Confirm expected entries and attachments, and the intended release number.
-- For each custodian, reproduce the original public card using the intended restored wallet and signing method.
-- Recover the saved wallet package using sufficient distinct custodians and an independently trusted matching receipt.
-- Check complete recovery independently from each offline copy.
-- If using online discovery, retrieve every file without saved credentials or a local publishing node, then recover offline.
-- Keep trusted recovery tools and compatible installers with your recovery materials.
-- Rehearse periodically and after wallet, firmware, custodian, or storage changes.
-
-The HTML handbook provides the actual [verification walkthrough](../../index.html#check-backup), [owner recovery](../../index.html#recover-owner), and [custodian recovery](../../index.html#recover-heirs).
+These tests are not an independent security audit. The age envelopes use a hybrid post-quantum scheme with 128-bit internal file keys. The owner passphrase and classical minisign signature routes have separate limits. Any sufficient group of heirs can recover at any time; old packages and released shares are not revocable.

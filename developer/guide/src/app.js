@@ -81,7 +81,7 @@
     }
   }
 
-  // All content is present locally. Search never transmits a query or reads a wallet.
+  // All content is present locally. Search never transmits a query or accesses private keys.
   const searchEntries = pages.flatMap(page => {
     const steps = [...page.querySelectorAll('.wizard-step')];
     return (steps.length ? steps : [page.querySelector('.reading')]).map((element, i) => ({
@@ -100,7 +100,7 @@
       document.querySelector('#search-count').textContent = '';
       const hint = document.createElement('p');
       hint.className = 'empty-search';
-      hint.textContent = 'Try “public card”, “owner.age”, “Trezor”, or “password”.';
+      hint.textContent = 'Try “heir.key”, “owner.age”, “recipient”, or “password”.';
       results.append(hint);
       return;
     }

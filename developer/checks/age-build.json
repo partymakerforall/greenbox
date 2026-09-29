@@ -3,10 +3,9 @@
   "profile": "production",
   "applicationModules": [
     "src/app.mjs",
-    "src/crypto.mjs",
-    "src/wallet.mjs"
+    "src/crypto.mjs"
   ],
-  "bytes": 145681,
-  "sha256": "872fd5ee1364d9bd4bc5d5e0ad485ebc512dd1bd73d938328a9086fadf267aa4",
+  "bytes": 195513,
+  "sha256": "a70f52ecd6a9a0dcee39c5ac99687d365e45525b2e9d92c5985f173a764b3b78",
   "externalRuntimeDependencies": 0
 }

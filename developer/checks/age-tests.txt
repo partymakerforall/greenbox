@@ -1,0 +1,84 @@
+
+> greenbox-age-recovery@2.0.0 test
+> node --test tests/*.test.mjs
+
+TAP version 13
+# Subtest: all ten groups of three recover in all six orders
+ok 1 - all ten groups of three recover in all six orders
+  ---
+  duration_ms: 68.618166
+  ...
+# Subtest: too few, duplicate, and altered shares fail
+ok 2 - too few, duplicate, and altered shares fail
+  ---
+  duration_ms: 3.485042
+  ...
+# Subtest: a later backup reuses keys but gets independent keys, shares and receipt
+ok 3 - a later backup reuses keys but gets independent keys, shares and receipt
+  ---
+  duration_ms: 37.262959
+  ...
+# Subtest: saved identity recreates its public recipient without a signing implementation
+ok 4 - saved identity recreates its public recipient without a signing implementation
+  ---
+  duration_ms: 1.379625
+  ...
+# Subtest: classic keys, secret keys in public input, multiple keys and bad checksums fail
+ok 5 - classic keys, secret keys in public input, multiple keys and bad checksums fail
+  ---
+  duration_ms: 1.833209
+  ...
+# Subtest: wrong heir key cannot open a share
+ok 6 - wrong heir key cannot open a share
+  ---
+  duration_ms: 2.440792
+  ...
+# Subtest: package tampering and receipt substitution are rejected
+ok 7 - package tampering and receipt substitution are rejected
+  ---
+  duration_ms: 7.266959
+  ...
+# Subtest: legacy formats fail with migration instructions
+ok 8 - legacy formats fail with migration instructions
+  ---
+  duration_ms: 0.154334
+  ...
+# Subtest: duplicate recipients and invalid thresholds fail before encryption
+ok 9 - duplicate recipients and invalid thresholds fail before encryption
+  ---
+  duration_ms: 0.402334
+  ...
+# Subtest: Go age restores keys and decrypts every browser-encrypted share
+ok 10 - Go age restores keys and decrypts every browser-encrypted share
+  ---
+  duration_ms: 107.34425
+  ...
+# Subtest: encrypted shares cannot be swapped, downgraded or rebound to another recipient
+ok 11 - encrypted shares cannot be swapped, downgraded or rebound to another recipient
+  ---
+  duration_ms: 9.656666
+  ...
+# Subtest: threshold endpoints 2-of-2 and 10-of-10 restore binary files
+ok 12 - threshold endpoints 2-of-2 and 10-of-10 restore binary files
+  ---
+  duration_ms: 125.151708
+  ...
+# Subtest: the advertised 32 MiB file size round-trips without parser failure
+ok 13 - the advertised 32 MiB file size round-trips without parser failure
+  ---
+  duration_ms: 4482.563167
+  ...
+# Subtest: the shipped HTML excludes sample data, simulated wallets and testing controls
+ok 14 - the shipped HTML excludes sample data, simulated wallets and testing controls
+  ---
+  duration_ms: 124.902792
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5043.833333

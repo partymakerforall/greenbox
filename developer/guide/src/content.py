@@ -15,7 +15,7 @@ page('start', 'A backup you know how to open.',
 <div class="start-layout">
 <div class="path-list">
 <a class="path featured" href="#owner"><span class="path-number">01</span><span><span class="eyebrow">BUILD YOUR BACKUP</span><strong>Create your Greenbox</strong><span>Protect a KeePass backup with a key, then protect that key with your passphrase.</span></span><span class="path-arrow" aria-hidden="true">→</span></a>
-<a class="path" href="#heirs"><span class="path-number">02</span><span><strong>Set up your heirs</strong><span>Collect reusable public cards. Let any three of five custodians help recover the backup.</span></span><span class="path-arrow" aria-hidden="true">→</span></a>
+<a class="path" href="#heirs"><span class="path-number">02</span><span><strong>Set up your heirs</strong><span>Collect reusable public age keys. Let any three of five custodians help recover the backup.</span></span><span class="path-arrow" aria-hidden="true">→</span></a>
 <a class="path" href="#check-backup"><span class="path-number">03</span><span><strong>Verify your backup</strong><span>Recover from your saved files and confirm that the password manager opens.</span></span><span class="path-arrow" aria-hidden="true">→</span></a>
 </div>
 <aside class="orientation"><span class="eyebrow">THE WHOLE IDEA</span><img src="assets/diagrams/two-routes.png" alt="Two ways back in"><a href="#basics">See how the pieces fit →</a></aside>
@@ -48,9 +48,9 @@ Use `verify.pub` to check the vault's signature, then `master.key` to decrypt it
 
 ## Adding heirs
 
-The wallet package protects the **same recovery keys**. Its encryption key is split into five shares, one protected for each custodian. Any three custodians can release their shares and recover the bundle, in any order.
+The heirs package protects the **same recovery keys**. Its encryption key is split into five shares, one protected for each custodian. Any three custodians can release their shares and recover the bundle, in any order.
 
-Each custodian creates a public card once. You reuse those cards for future backups.
+Each custodian creates an age key once, keeps its private file, and sends you its public recipient. You reuse those recipients for future backups.
 
 [Set up your heirs →](#heirs)
 
@@ -63,7 +63,7 @@ Each custodian creates a public card once. You reuse those cards for future back
 
 Memory-only recovery also needs a way to find the encrypted kit. [Storage and discovery →](#keep)
 
-<details class="technical"><summary>How does the wallet produce an encryption key?</summary><p>The wallet signs a fixed private message. Greenbox derives a separate encryption key from that signature. A different public signature proves which account registered the public card. The private signature stays in the trusted page's memory.</p><p>The derived key is reused across backups. Someone obtaining it can open that custodian's share in every package using the card; they still need enough other shares to recover.</p><a href="#ref-protocol">Protocol details →</a></details>
+<details class="technical"><summary>How do the heirs’ keys work?</summary><p>Each heir generates a random post-quantum age key pair. You encrypt one Shamir share to their public recipient; they use their saved private key to open it. The key is restored from its saved file, not recreated from a wallet signature.</p><a href="#ref-protocol">Protocol details →</a></details>
 ''', source=None)
 
 page('check-backup', 'Verify your backup',
@@ -80,7 +80,7 @@ Use a separate folder for recovered files.
 step('Recover from the saved files', r'''
 Follow your chosen recovery guide through to opening KeePass.
 
-For the wallet route, start a fresh browser session and load the saved package and trusted receipt. This checks the downloaded files.
+For the heirs route, start a fresh browser session and load the saved package and trusted receipt. This checks the downloaded files.
 
 <div class="checkpoint"><strong>Result</strong><p>The saved kit produces a readable KeePass database.</p></div>
 '''),
@@ -95,7 +95,7 @@ diff -rq private/payload restored/payload
 
 No output means the folders match. Repeat recovery from each stored copy.
 
-For the heirs route, also [check each custodian's restored wallet](#heirs/5).
+For the heirs route, also [check each custodian’s saved age key](#heirs/5).
 ''')])
 
 page('owner', 'Create your Greenbox',
@@ -263,75 +263,85 @@ Keep `sign.key` and `master.recipient` separately for future updates. **Keep `pr
 ''')], source='docs/OWNER-REFERENCE.md')
 
 page('heirs', 'Set up your heirs',
-     'One package. Five custodians. Any three can recover it, in any order.',
+     'Five saved age keys. Any three people can recover. No invitation or wallet signing.',
      'Build & recover', steps=[
-step('Choose what the heirs should recover', r'''
+step('Choose five custodians', r'''
 The heirs route protects **`private/bundle.tar`** from owner setup. Any three of five custodians can recover its keys and open your vault without your passphrase.
 
-Use five people, each with their own wallet. They can cooperate at any time; this setup does not enforce an inheritance date.
+Choose five people who can keep a private key safely. Any three can cooperate at any time; this setup does not enforce an inheritance date.
 
-Hardware-wallet restoration still needs testing. [Compatibility details →](#ref-protocol!wallet-and-trezor-compatibility)
+Use your trusted local copy of the recovery tool for real files.
 
 <p><a class="button primary" data-tool href="recovery.html" target="_blank" rel="noopener">Open the recovery tool ↗</a></p>
 '''),
-step('Each custodian makes a public card', r'''
-Each custodian does this once:
+step('Each custodian creates an age key', r'''
+Each person installs **age 1.3 or newer**. On a Mac:
 
-1. Open **Make a key** in the recovery tool.
-2. Select their Ethereum account in Rabby or MetaMask, then **Connect wallet**.
-3. Choose **Readable message** for MetaMask + Trezor. Other supported accounts can use **Structured message** on Ethereum mainnet.
-4. Click **Create my public key** and approve the three prompts.
-5. **Download public key card** and send it to you.
+```sh
+brew install age
+```
 
-The first two prompts create the private recovery key and check that it repeats. The third proves which account owns the public card. No transaction or payment is involved.
+Then run in Terminal:
 
-**Send only the public card. Wallet seed words never go into the page.**
+```sh
+umask 077
+mkdir greenbox-heir
+cd greenbox-heir
+age-keygen -pq -o heir.key
+age-keygen -y -o heir.recipient heir.key
+```
 
-<div class="checkpoint"><strong>Result</strong><p>Five public cards. Confirm each card's full account address with its custodian, then keep the cards for future backups.</p></div>
+- `umask 077` limits access to new files.
+- `mkdir` creates the folder; `cd` enters it.
+- `age-keygen -pq` creates a random post-quantum private key in **heir.key**.
+- `age-keygen -y` reads that key and writes its public counterpart to **heir.recipient**.
 
-[Wallet signing help →](#help!trezor-will-not-sign-the-message)
+**Keep heir.key private.** Store two protected copies separately. Send only **heir.recipient** to the creator.
+
+Name each public file after its heir, such as `Alice.recipient`. The creator loads the recipient and confirms its full fingerprint with its custodian through a trusted contact method. The tool displays this fingerprint when a recipient is loaded.
+
+<div class="checkpoint"><strong>Result</strong><p>Five public recipient files. The heirs keep their private keys; you never need them to make a backup.</p></div>
 '''),
 step('Encrypt one recovery package', r'''
-On your prepared offline computer, open **Build a package**. Bring the public cards there; your wallet is not needed.
+On your prepared offline computer, open **Build a package**:
 
-1. **Add public key cards** — select the five cards.
-2. Set the recovery rule to **3 of 5**.
+1. **Add public recipient files** — select the five `.recipient` files.
+2. Set **3 of 5**.
 3. Enter a backup name and select **`private/bundle.tar`**.
 4. Click **Encrypt recovery package**.
-5. Download the package and receipt. Put both in `kit/`.
+5. Download the package and receipt into `kit/`.
 
-The tool encrypts the bundle once, splits its encryption key into five shares, and protects one share for each custodian. Any three can recover it, in any order.
+The tool encrypts the bundle once, splits its encryption key into five shares, and encrypts each share to one custodian. Any three can recover it in any order.
 
 <div class="checkpoint"><strong>Result</strong><p>greenbox-package.json and its matching greenbox-receipt.json.</p></div>
 
-Reuse the same public cards for future packages. Custodians do not need to sign again. [Updating a backup →](#keep)
+Reuse the same recipients for later backups. Heirs do not generate new keys. [Updating a backup →](#keep)
 '''),
-step('Give the receipt a trusted home', r'''
-Send **`greenbox-receipt.json` directly to each custodian through a trusted channel**. Keep a separate trusted copy too.
+step('Keep the right files', r'''
+Send **`greenbox-receipt.json` directly to each custodian through a trusted channel**. It identifies the exact package you created. It is a fingerprint, not a signature proving who created it.
 
-The receipt identifies the exact package you created. A receipt downloaded beside an unknown package does not establish who created it.
-
-| Keep | Where |
+| File | Who keeps it |
 |---|---|
-| Complete `kit/`, handbook, and recovery tool | Your backup locations |
-| Matching receipt | Kit and custodians' trusted copies |
-| Public cards | You and the custodians |
-| Wallet recovery material | Each custodian keeps their own |
+| Complete `kit/`, handbook, recovery tool | Your backup locations |
+| Matching receipt | Kit and each custodian’s trusted copy |
+| Public `.recipient` files | You and the custodians; reusable |
+| Private `.key` file | Only its custodian, with protected backups |
+
+The encrypted package contains the public recipients too. No invitation file is involved.
 '''),
-step('Prove the heirs can recover', r'''
-Follow [Recover with custodians](#recover-heirs) with any three people. Recover the bundle, verify and decrypt the vault, and open KeePass.
+step('Test the saved keys and full recovery', r'''
+Each custodian checks a **saved backup copy** of their key:
 
-Also check each custodian using a spare or already-restored wallet:
+1. Open **Make a key** in the recovery tool.
+2. **Load heir.recipient**.
+3. **Check saved heir.key** — select the restored private file.
+4. Confirm the keys match.
 
-1. Open **Make a key → Check a restored wallet**.
-2. **Load existing public card**.
-3. Connect the original account, with the same wallet passphrase and account path.
-4. Click **Check this wallet against the card** and sign.
-5. Release a share and complete recovery with two other custodians.
+Then follow [Recover with custodians](#recover-heirs) with any three people. Recover the bundle, verify and decrypt the vault, and open KeePass.
 
-Use a spare device for this check; keep the working wallet intact.
+**Restore means copying back the saved key.** Running `age-keygen` again creates a different key and cannot restore the old one.
 
-<div class="checkpoint"><strong>Result</strong><p>The restored wallet reproduces its original key, and three custodians recover the backup without your Greenbox phrase.</p></div>
+<div class="checkpoint"><strong>Result</strong><p>Saved keys match their recipients, and three custodians recover the database without your Greenbox phrase.</p></div>
 ''')], source=None)
 
 page('recover', 'Recover an existing backup',
@@ -339,10 +349,10 @@ page('recover', 'Recover an existing backup',
      'Build & recover', r'''
 <div class="path-list recovery-paths">
 <a class="path featured" href="#recover-owner"><span class="path-number">A</span><span><strong>I have the owner passphrase</strong><span>Open owner.age, recover the keys, verify the vault, and open KeePass.</span></span><span class="path-arrow" aria-hidden="true">→</span></a>
-<a class="path" href="#recover-heirs"><span class="path-number">B</span><span><strong>Three custodians can help</strong><span>Use wallets to release shares, recover bundle.tar, and open the same vault.</span></span><span class="path-arrow" aria-hidden="true">→</span></a>
+<a class="path" href="#recover-heirs"><span class="path-number">B</span><span><strong>Three custodians can help</strong><span>Use saved age keys to release shares, recover bundle.tar, and open the same vault.</span></span><span class="path-arrow" aria-hidden="true">→</span></a>
 </div>
 
-Both routes need `vault.age` and `vault.age.minisig`. Owner recovery also needs `owner.age`; custodian recovery needs the wallet package and its trusted receipt.
+Both routes need `vault.age` and `vault.age.minisig`. Owner recovery also needs `owner.age`; custodian recovery needs the heirs package and its trusted receipt.
 
 ''')
 
@@ -447,14 +457,26 @@ Each participating custodian opens the recovery tool on their computer.
 <div class="checkpoint"><strong>Check</strong><p>The package matches the trusted receipt. Everyone uses this same package.</p></div>
 '''),
 step('Each custodian releases their share', r'''
-1. Connect the original registered wallet account.
-2. Click **Use my wallet to open my share** and approve the private message.
-3. Click **Download my secret share**.
-4. Send that file **privately to the recovering person**.
+1. Click **Open my share with heir.key** and select the saved private key.
+2. Click **Download my secret share**.
+3. Send that file **privately to the recovering person**.
 
-The tool recreates the custodian's key and uses it to open their share.
+The private key opens only this custodian’s share. The downloaded share does not contain the private key.
 
-<div class="checkpoint"><strong>Result</strong><p>One secret share from each custodian. Enough released shares can recover the package without the wallets.</p></div>
+<details class="technical"><summary>Prefer using age in Terminal?</summary>
+
+In the tool, expand **Use age in Terminal instead**, select your name, and download your encrypted `.age` share. For share 1:
+
+```sh
+umask 077
+age -d -i heir.key -o share-1.json share-1.age
+```
+
+Use your downloaded share number in both filenames. This reads `heir.key`, decrypts `share-1.age`, and writes the secret share into `share-1.json`. Send the JSON file privately to the recovering person.
+
+</details>
+
+<div class="checkpoint"><strong>Result</strong><p>One secret share from each custodian. Enough released shares can recover this package without their private keys.</p></div>
 '''),
 step('Combine any three and recover the file', r'''
 The recovering person opens **Recover** and loads the same package and trusted receipt.
@@ -463,7 +485,7 @@ The recovering person opens **Recover** and loads the same package and trusted r
 2. **Add recovery share files** — select three distinct shares, in any order.
 3. Click **Recover original file**, then **Download recovered file**.
 
-No wallet connection is needed for this step.
+No private age keys are needed for this step.
 
 <div class="checkpoint"><strong>Result</strong><p>bundle.tar, containing the keys to your Greenbox vault.</p></div>
 
@@ -530,8 +552,8 @@ page('files', 'A field guide to the files',
 | `vault.age` | Encrypted KeePass payload | Keep in the kit |
 | `vault.age.minisig` | Signature on the encrypted vault | Keep beside the matching vault |
 | `README.txt` | Public recovery instructions | Keep in the kit; no secrets |
-| `greenbox-package.json` | Optional wallet route to the same bundle | Keep in the kit; metadata is public |
-| `greenbox-receipt.json` | Fingerprint of that exact wallet package | Keep in the kit **and** through a separately trusted route |
+| `greenbox-package.json` | Optional heirs route to the same bundle | Keep in the kit; metadata is public |
+| `greenbox-receipt.json` | Fingerprint of that exact heirs package | Keep in the kit **and** through a separately trusted route |
 
 ## The owner's working files
 
@@ -551,7 +573,14 @@ page('files', 'A field guide to the files',
 
 ![Public cards and secret shares](assets/diagrams/cards-and-shares.png)
 
-The private derivation signature and derived private encryption key exist in the trusted tool's memory. They are not included in public cards. Someone obtaining a private derivation signature can open that custodian's share.
+The public key card in the diagram is the plain-text **`.recipient` file**.
+
+| File | Purpose | Secret? |
+|---|---|---|
+| `heir.key` | Opens one heir’s encrypted shares across backups | **Yes; keep protected copies** |
+| `heir.recipient` | Encrypts shares for that heir; reusable | No |
+| `share-1.age` | Encrypted share exported for age CLI recovery | No; its metadata is public |
+| `share-1.json` | Released share for one package | **Yes; send privately** |
 
 ''', source=None)
 
@@ -591,19 +620,25 @@ Hidden Terminal password entry displays no characters. Type the phrase and press
 
 Keep it. Do not regenerate good keys or overwrite a successful backup simply to repeat a step. Resume at verification, or make a fresh empty working folder and use consistent paths throughout.
 
-## “No wallet appears”
+## “My private key is missing”
 
-Open the recovery tool in the browser profile where Rabby or MetaMask is installed and enabled. This guide can be read anywhere, but an in-app browser may not contain your wallet extension. Refresh before loading important work, select the extension explicitly, then connect.
+Restore `heir.key` from a protected backup. Its public `.recipient` cannot recreate it. In a 3-of-5 setup, the other heirs can still recover when three working keys remain.
 
-## “Trezor will not sign the message”
+## “Use a post-quantum age recipient”
 
-Pair the device through the extension first. For a new **MetaMask + Trezor** enrollment, choose **Readable message**. Rabby structured signing depends on its installed integration. Safe 7 needs Suite and a current compatible Connect integration. Do not import a hardware seed into a software wallet to work around signing support.
+Create keys with `age-keygen -pq`, using age 1.3 or newer. An ordinary `age1…` recipient is classical; this tool requires `age1pq1…` recipients. For an existing package, restore its original private key rather than generating a replacement.
 
-## The recreated wallet key is different
+## Legacy recovery
 
-Stop and keep the original public card. Check the exact registered account, hidden-wallet passphrase/account path, original signing method, and signing implementation.
+Old heirs packages use a different format. Keep their original tool and recovery material. To retrieve the previous tool from this repository’s Git history:
 
-Switching from structured to readable signing creates a different key. Replacing the card does not make an existing package decryptable. Test [restoration against the original card](#heirs/5).
+```sh
+git show cd25eb09a1e025740562b3b3afb3d568e9f07a69:recovery.html > /tmp/greenbox-wallet-legacy.html
+```
+
+Open that file in the browser with the original wallet extension. Follow its saved signing method to recover the old package. Signature reproduction depends on the original signer; success is not guaranteed after changing wallet software. The owner passphrase route remains available when you have its matching kit and phrase.
+
+Once recovered, create a new package using the heirs’ age recipients. Changing formats does not revoke old copies. The new tool never silently converts or accepts heirs packages.
 
 ## “The receipt does not match”
 
@@ -611,7 +646,7 @@ Find the correct package and its independently trusted matching receipt. Do not 
 
 ## “I have two shares but cannot recover”
 
-A 3-of-5 package needs three **distinct** shares for that exact package. Adding the same share twice does not count twice. Public key cards are not released secret shares.
+A 3-of-5 package needs three **distinct** shares for that exact package. Adding the same share twice does not count twice. Public recipients are not released secret shares.
 
 ## Signature verification or a file comparison fails
 
@@ -629,7 +664,7 @@ Open Terminal in the repository root and run:
 node developer/guide/tools/serve.mjs
 ```
 
-Open [127.0.0.1:8788](http://127.0.0.1:8788/) in your wallet browser. Keep Terminal open; **Control-C** stops the server. This needs Node.js, with no library installation. To read offline, open **index.html** directly.
+Open [127.0.0.1:8788](http://127.0.0.1:8788/) in your browser. Keep Terminal open; **Control-C** stops the server. This needs Node.js, with no library installation. To read offline, open **index.html** directly.
 
 The **developer** folder contains the sources, automated tests, and optional references. You do not need to open it to follow this handbook. Keep your actual backup kits in a separate private workspace.
 ''')
@@ -648,13 +683,13 @@ Keep `sign.key` and `master.recipient` separately for future updates. Plaintext 
 | Change | What to create |
 |---|---|
 | KeePass contents | New payload, `vault.age`, and signature. Keep the existing wrappers for unchanged recovery keys. |
-| Master key or verification key | New bundle, owner wrapper, wallet package, and receipt |
-| Custodians or threshold | New wallet package and receipt |
-| A directly wallet-protected `.kdbx` | New wallet package and receipt |
-| Custodian's wallet account or signing method | New public card and package |
-| Wallet software or firmware | Check the restored wallet against its saved card |
+| Master key or verification key | New bundle, owner wrapper, heirs package, and receipt |
+| Custodians or threshold | New heirs package and receipt |
+| A directly heirs-protected `.kdbx` | New heirs package and receipt |
+| Custodian’s key is replaced | New recipient, heirs package, and receipt |
+| Custodian restores a saved key | Check it against the existing recipient; no new package |
 
-**Reuse existing public cards for new packages. Custodians do not sign again.** Deliver each new receipt through the trusted channel.
+**Reuse existing public recipients for new packages. Heirs do not create new keys.** Deliver each new receipt through the trusted channel.
 
 Build each release separately and verify it before replacing your stored copies.
 
@@ -680,26 +715,25 @@ Recheck phrase recall, stored copies, custodian contacts, and full recovery at l
 page('verification', 'What has actually been proved',
      'Keep the software rehearsal results separate from the tests your real setup still needs.',
      'Reference', r'''
-## Completed with dummy data
+## Automated checks
 
-<div class="proof-row"><span class="proof-symbol" aria-hidden="true">✓</span><div><h3>You opened the KeePass test</h3><p>The earlier owner recovery reached the actual database and you read its challenge value.</p></div></div>
-<div class="proof-row"><span class="proof-symbol" aria-hidden="true">✓</span><div><h3>Every group of three recovered</h3><p>The wallet tests cover all 10 groups of three in all six possible orders for both package versions: 120 recovery cases. The suite contains 40 tests, including reusable cards, older-file compatibility, tampering, invalid inputs, and exclusion of test fixtures from the production build.</p></div></div>
-<div class="proof-row"><span class="proof-symbol" aria-hidden="true">✓</span><div><h3>Recovery worked after a browser reload</h3><p>Saved dummy shares, package, and receipt recovered the original database without a connected wallet. KeePassXC opened it.</p></div></div>
-<div class="proof-row"><span class="proof-symbol" aria-hidden="true">✓</span><div><h3>The full bundle route worked too</h3><p>The wallet package recovered bundle.tar, then minisign verified the vault, age decrypted it, and the dummy KeePass database opened.</p></div></div>
+- All ten groups of three recover in all six orders: **60 recovery cases**.
+- Browser-created encrypted shares decrypt with the age command-line tool; CLI-created keys and shares work in the browser implementation.
+- Updated backups reuse the same public recipients and receive fresh file keys, shares, and receipts.
+- Wrong keys, duplicate shares, mixed packages, changed files, and classical recipients are rejected.
+- The production page excludes test fixtures, wallet connections, and simulated recovery controls.
 
-The owner and full-bundle results describe earlier rehearsals. The retained automated tests are rerun after project changes. These checks are not an independent audit of the cryptographic integration.
+[Latest verification results and acceptance checklist →](#ref-verification)
 
-## Still to prove with your own setup
+## Test your own setup
 
-- Each intended Trezor Safe 3/5/7 and extension can recreate the same registered key after restoration.
-- The five accounts correspond to your intended independent custodians, who can follow the procedure.
-- Your real database opens using only recovered information, including all key files and dependencies.
-- Both physical offline copies support complete recovery with available tools.
-- Your remembered name finds a complete online kit without needing a saved login, if you adopt online discovery.
+- Each heir restores a saved private key and checks it against their public recipient.
+- Any three intended heirs recover the database and open it with the recovered unlock instructions.
+- Both offline copies contain the complete kit and working tools.
+- Your remembered name finds a complete online kit without a saved login, if you adopt online discovery.
 
-The wallet route is classical cryptography, even when it protects an age post-quantum identity. It does not enforce an inheritance date, revoke released shares, or recover missing ciphertext.
+The age share envelopes use hybrid post-quantum encryption. This does not make every Greenbox route equally resistant: age uses 128-bit internal file keys, the owner phrase must resist guessing, and minisign uses classical signatures. This integration has not had an independent security audit.
 
-<div class="footer-links"><a href="#ref-verification">Full acceptance checklist →</a><a href="#ref-protocol">Protocol and assumptions →</a></div>
 ''', source='docs/VERIFICATION.md')
 
 REFERENCE_DOCS = [

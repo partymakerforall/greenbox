@@ -35,5 +35,6 @@ greenbox-receipt.json
 greenbox-public-key-*.json
 greenbox-SECRET-share-*.json
 
-# Public, disposable compatibility fixtures are part of the tests.
-!developer/wallet-recovery/tests/fixtures/legacy-downloads/*.json
+# Local heir exports
+*.recipient
+share-*.json

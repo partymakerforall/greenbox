@@ -1,8 +1,12 @@
 {
   "date": "2026-09-28",
-  "browser": "Headless Chrome 154.0.8037.57",
+  "format": "greenbox.age.package/1",
+  "ageVersion": "1.3.1",
+  "recoveryTestsPassed": 14,
+  "threeOfFiveRecoveryCases": 60,
+  "serverAndPagesTestsPassed": 7,
   "handbookRoutes": 37,
-  "viewportWidths": [
+  "handbookViewportWidths": [
     320,
     390,
     768,
@@ -10,30 +14,10 @@
     1440,
     1920
   ],
-  "walletTestsPassed": 40,
-  "serverTestsPassed": 4,
-  "recoveryPage": {
-    "path": "/tool",
-    "secureContext": true,
-    "webCryptoAvailable": true,
-    "views": 3,
-    "initialError": null
-  },
-  "runtimeExternalDependencies": 0,
-  "diagramImages": {
-    "placements": 7,
-    "uniqueImages": 6,
-    "embeddedInHtml": true,
-    "offlineFileLoadingVerified": true,
-    "desktopAndMobileViewerVerified": true,
-    "actualSizeZoomVerified": true,
-    "keyboardOpenAndEscapeVerified": true
-  },
-  "cryptographicImplementationUnchanged": true,
-  "compatibilityFixturesPreserved": true,
-  "dependencyInstallNeededForNormalUse": false,
-  "repositoryAudit": "docs/REPOSITORY-AUDIT.md",
-  "repositoryLayout": "root",
-  "localServerRootFilesVerified": true,
-  "pagesTestsPassed": 3
+  "recoveryLayoutCases": 18,
+  "embeddedDiagrams": 7,
+  "uniqueImages": 6,
+  "externalRuntimeDependencies": 0,
+  "independentSecurityAudit": false,
+  "legacyRecovery": "Previous Git release; not included in current production app"
 }

@@ -1,109 +1,94 @@
-# Protocol and limits
+# Age recovery protocol
 
-Version 2 research integration: reusable wallet-derived public cards, with version 1 recovery compatibility. Project paths updated 25 September 2026. [Heirs setup](../../index.html#heirs) · [Recovery](../../index.html#recover-heirs). This document describes the implementation in developer/wallet-recovery, not a standardized recovery format or an audited product.
+Current format: `greenbox.age.package/1`. This is a Greenbox integration, not a standardized threshold age format or independently audited product. Older wallet packages require their previous tool; see [Legacy recovery](../../index.html#help!legacy-recovery).
 
-## The construction
+## How it works
 
-![Wallet recovery protocol](../guide/assets/diagrams/wallet-protocol.png)
+![Age key recovery](../guide/assets/diagrams/age-protocol.png)
 
-Ethereum addresses alone cannot encrypt this package. Custodians first enroll their derived public encryption keys. The creator then needs only these public keys to make future packages without a new signing request or invitation exchange. A fresh file key, Shamir split, nonces, and ephemeral keys are generated for every package.
+Each heir creates a native hybrid post-quantum age identity with `age-keygen -pq`. They retain the private key and send the creator its public recipient. The creator reuses these recipients across backups, with no enrollment message, wallet, invitation, or signature.
 
-There is one encrypted payload and one encrypted share per custodian, rather than one package for every combination. The default is 3-of-5; the implementation accepts 2–10 distinct accounts with a threshold of 2 up to the total.
+The application accepts 2–10 distinct recipients, with a threshold from 2 to the total. Every package contains one encrypted payload and one separately encrypted Shamir share for each heir. Any threshold of different shares recovers the payload, in any order.
 
-## Signature-derived encryption keys
+Putting several recipients on a single ordinary age file gives **any one** of them access. Greenbox instead encrypts each Shamir share to exactly one recipient to implement the threshold.
 
-New cards use the fixed key scheme `Greenbox/reusable-wallet-key/v2`. There is no random recovery context to exchange. The same account, signing method, protocol version, and reproducible signature recreate the same encryption key. File contents, backup labels, recipients, and thresholds are not inputs to this derivation.
+## Reproducibility and storage
 
-EIP-712 uses domain name `Greenbox PRIVATE Reusable Recovery Key`, version `2`, chain ID `1`. Its primary type is `GreenboxReusableRecoveryKey`, with ordered fields `purpose: string`, `keyScheme: string`, and `custodian: address`. The purpose is the fixed `REUSABLE_PURPOSE` string in `src/crypto.mjs`; it explicitly states that this private key is reused across backups. The key scheme is the constant above and custodian is the lowercase account.
+Key generation is random, not deterministic. Reproducible recovery comes from keeping and restoring the exact private key file. Deriving the public recipient from the same private identity is stable and interoperable with the age command-line tool. No wallet signing implementation participates.
 
-`personal_sign` uses five UTF-8 lines, joined by one newline with no trailing newline: `GREENBOX PRIVATE REUSABLE RECOVERY KEY`, `Protocol version: 2`, `Key scheme: Greenbox/reusable-wallet-key/v2`, `Ethereum account: ` followed by the lowercase account, and the same fixed purpose. These exact strings are protocol inputs, not editable copy. The application reconstructs messages from validated fields; it does not accept an arbitrary signing request from an imported file.
+An heir can run:
 
-Every signature is verified against the expected account. The prototype supports 65-byte ECDSA signatures from individual accounts. It normalizes low/high-S and v=0/1 versus v=27/28, then uses the normalized 64-byte r||s as HKDF input:
+```sh
+age-keygen -y -o heir.recipient heir.key
+```
 
-- HKDF-SHA-256 salt: SHA-256 of the UTF-8 key scheme string, used as 32 raw bytes.
-- Info: `Greenbox/wallet-derived-X25519/v2/` + method + `/` + lowercase account.
-- Output: 32 bytes used as an X25519 private key.
+The application accepts one unencrypted native PQ identity per key file, allowing age-keygen comments and blank lines. It does not accept classical identities, hardware plugins, or encrypted identity files directly. Decrypt an encrypted identity locally with age before using it in the browser, or use age to decrypt the exported share without loading the key into the browser.
 
-Enrollment requests the private signature twice and compares the resulting encryption public keys. A genuinely different ECDSA nonce can produce a valid but different key; enrollment rejects that case. Normalization handles equivalent encodings only. It cannot make randomized signatures deterministic.
+Protect private-key backups independently of the Greenbox they help recover. Loss of a key loses that heir’s access to all its shares. Exposure gives an attacker that heir’s access to all packages using the recipient. A new key requires new packages; it cannot revoke retained old ciphertext.
 
-The third signature is a **separate public registration proof**, with its own domain/purpose. For new cards its EIP-712 domain is `Greenbox PUBLIC Reusable Key Registration`, version `2`, chain ID `1`, and primary type `GreenboxReusableRegistration`. It binds purpose, key scheme, account, signing method, and public encryption key. The readable alternative starts `GREENBOX PUBLIC REUSABLE KEY REGISTRATION` and binds the same fields. It is safe to include this proof in public artifacts under the protocol's assumptions. The private derivation signature is never exported. Reusing that private signature as the public proof would expose the encryption key; this implementation explicitly separates the two messages.
+## Cryptographic construction
 
-No time, nonce, hostname, browser origin, or expiration is added to the private signing request. These would change the derived key. As a consequence, another site can reproduce the request. Signing that exact private message on a malicious site gives that site the power to open your share in every package using that key, including future packages. The same scope applies to theft of the derived private key. This reuse tradeoff is intentional; other shares are still required to reach the threshold. EIP-712 domain names are not a website authentication mechanism.
+1. Generate a fresh random 32-byte payload key and 12-byte nonce using the platform CSPRNG.
+2. Encrypt the payload with AES-256-GCM and a 128-bit authentication tag. Authenticate the complete canonical header as additional data.
+3. Split the key using `shamir-secret-sharing` 0.0.4 over GF(256). Each share is 33 bytes: the 32-byte secret share and the library’s coordinate byte.
+4. Compute a context digest: SHA-256 of canonical JSON containing `{header, payload}`.
+5. For every heir, create a contribution object binding the package ID, context digest, recipient fingerprint, 1-based index, and base64 share.
+6. Encrypt that object as a standard age file with **one** hybrid ML-KEM-768 + X25519 recipient, using `age-encryption` 0.3.1. Store the base64 age file and a SHA-256 commitment to the raw share.
+7. Create the receipt containing the package ID and SHA-256 of the entire canonical package.
 
-## File and share protection
+Canonical JSON sorts object keys lexicographically, preserves array order, and otherwise uses JSON string/number encoding. Hashes and identifiers use lowercase hex without a prefix. Binary fields use padded standard base64. The parser rejects unexpected fields, invalid key checksums, unsupported formats, duplicate recipients, and invalid size/threshold values.
 
-- Random 32-byte file key, AES-256-GCM, fresh 12-byte nonce, 128-bit tag.
-- The canonical package header is authenticated additional data. For version 2 it includes the suite, backup label, random package ID, threshold, recipients, and original file metadata.
-- Privy's `shamir-secret-sharing` splits the file key using GF(256). This implementation produces 33-byte shares for a 32-byte secret, including the library's coordinate byte.
-- Each share gets a fresh ephemeral X25519 key pair. ECDH with the custodian's registered public key feeds HKDF-SHA-256.
-- Share HKDF salt is SHA-256 of the canonical header. Its info and AES-GCM additional data bind the header digest, encrypted-payload digest, recipient account, recipient public key, recipient index, ephemeral public key, and purpose `Greenbox/share-wrap/v1`.
-- Each share has a public SHA-256 commitment. This detects an incorrect or corrupted released share. The final file's AES-GCM tag independently authenticates the reconstructed file key and plaintext.
-- Canonical JSON recursively sorts object keys while preserving array order. All protocol strings and fields are explicitly constructed/validated. Each format and the cryptographic suite are versioned.
+The share context intentionally excludes the encrypted envelopes, avoiding a circular hash dependency. The separately trusted receipt covers all envelopes as well as the header and encrypted payload. Altering the payload or header invalidates existing contributions. Altering an envelope invalidates the receipt; age also authenticates its encrypted contents.
 
-A version 2 public receipt stores the package ID and SHA-256 of the entire canonical package. The app refuses to release or combine shares without a matching receipt and a source confirmation. **The receipt is not an owner signature.** Trust comes from its separate delivery or trusted storage. Replacing both package and receipt defeats this identity check. Recipient registration proofs bind individual keys, not the creator's intent or human identities.
+## Files
 
-A released contribution contains one raw share, account/index, package ID, and receipt fingerprint. It is a transferable secret and does not expire. Any threshold of matching contributions can recover without further wallet interaction. There is no revocation of already copied packages/shares and no enforced waiting period or inheritance event.
+| File | Contents |
+|---|---|
+| `heir.recipient` | Ordinary text age public recipient; not a Greenbox JSON card |
+| `heir.key` | Native private age identity; never exported by the app |
+| `greenbox-package.json` | Format, header, encrypted payload, encrypted shares and share commitments |
+| `greenbox-receipt.json` | `greenbox.age.receipt/1`, package ID, package fingerprint |
+| `share-N.age` | Standard age envelope exported from the package |
+| Released share JSON | `greenbox.age.share/1`, package ID, context, recipient ID, index and secret share |
 
-## Compatibility and updates
+The header includes the suite, random 32-byte package ID, backup label, threshold, public recipients with labels and SHA-256 fingerprints, and original filename, size and MIME type. Labels, public keys, file metadata, and threshold are public. Payloads are limited to 32 MiB; the UI caps JSON imports at 48 MiB.
 
-New cards, packages, and receipts use `greenbox.wallet.custodian/2`, `greenbox.wallet.package/2`, and `greenbox.wallet.receipt/2`. The underlying file/share encryption suite remains `X25519-HKDF-SHA256-AES256GCM-SSS-GF256-v1`; those primitives and wrapping contexts have not changed. Contributions retain `greenbox.wallet.contribution/1` because their existing package ID and fingerprint already bind them to one exact package.
+## Recovery and validation
 
-Version 1 cards contain their original invitation, including the random recovery ID. Their exact private/public messages, signatures, HKDF salt (recovery ID bytes), and info prefix `Greenbox/wallet-derived-X25519/v1/` remain unchanged. Version 1 packages and receipts still require their original format and matching recovery ID. Compatibility is checked against a fixture produced before the version 2 code change, and the previously downloaded browser package/shares.
+The heir first checks the complete package against an independently trusted receipt. The tool derives their public recipient from their saved private identity, selects their encrypted share, and decrypts it with age. It then verifies the decrypted contribution’s package/context/recipient/index binding and share commitment.
 
-A version 2 package accepts either card version, including legacy cards from different invitation contexts. Each recipient's card supplies its own recipe for recreation. The user no longer imports, creates, or distributes an invitation file. The tool rejects unknown formats and schemes instead of guessing.
+Alternatively, export the corresponding `.age` file and use age 1.3+:
 
-The creator can import saved cards individually or load the validated recipient cards from an existing package. This convenience does not authenticate the intended selection: confirm the full account addresses independently before encrypting. No creator wallet or custodian signing is required to build a new package with existing cards. File keys, split shares, nonces, ephemeral keys, package IDs, and receipts are fresh for each new package. Contributions from an older package cannot recover the new package.
+```sh
+umask 077
+age -d -i heir.key -o share-1.json share-1.age
+```
 
-An older card and a new reusable card for the same wallet may derive different keys. A new card does not update or repair an older package. Keep the original card and updated tool; recovery selects the original recipe automatically. An old HTML tool will not recognize version 2 files. Restore checks must use the original card, not a freshly enrolled replacement.
+The recovering person imports distinct contributions from the same package. Greenbox validates every contribution, combines the threshold number, and authenticates/decrypts the payload with AES-GCM. The package’s original filename is used for the download, with unsafe filename characters replaced.
 
-## Files and secrecy
+For a full owner kit, that payload is `bundle.tar`. Its `master.key` decrypts the vault and `verify.pub` checks its minisign signature. A directly protected KeePass database still needs its own KeePass password and any key file.
 
-| File | Secret? | Keep / send to |
-|---|---|---|
-| Reusable public key card | No | Creator for future backups; custodian for restoration checks |
-| Encrypted package | Ciphertext, but metadata is public | Redundant storage and custodians |
-| Public receipt | No; its authenticity matters | Separate trusted delivery/storage |
-| Released share | **Yes** | Recovering person, privately |
-| Recovered file | Treat as sensitive | Recovering person |
-| Private derivation signature/key | **Yes** | Memory only inside the trusted page |
+## Trust and limits
 
-The package includes a backup label, account addresses, public encryption keys, public registration signatures, threshold, filename, size, and MIME type. It is not metadata-private. A single file up to 32 MiB is supported; no compression or archive extraction occurs. A recovered filename is sanitized before download, and recovered content is downloaded as binary rather than executed or displayed in the page.
+- Public recipients need a trusted exchange or fingerprint comparison with the intended heir. Names in filenames do not authenticate people.
+- The receipt is a fingerprint, **not a signature**. Anyone can create a replacement package and matching receipt. Keep the original receipt through a trusted route.
+- Hybrid age recipients protect against either classical or post-quantum key-agreement failure, under their respective assumptions. The age format still uses a **128-bit internal file key**. The AES-256 payload layer does not increase the security of the weaker enclosing route. This is not a claim of 256-bit post-quantum security throughout.
+- The independent owner route depends on passphrase strength and its password KDF. Minisign uses classical Ed25519 signatures. Calling the entire kit “quantum proof” would be inaccurate.
+- Any threshold of heirs can recover at any time. This is not an inheritance date gate, revocation system, or verifiable secret sharing protocol.
+- Local execution avoids sending files to a service; it does not protect against a compromised computer or malicious replacement HTML. Use a reviewed local copy for real keys.
+- The app has no network requests, external runtime scripts, browser storage, or wallet APIs. Private inputs are short-lived local variables; secret byte buffers are cleared where practical. JavaScript garbage collection prevents guaranteed memory erasure.
+- A missing encrypted package cannot be reconstructed from keys alone. Public availability, discovery, freshness and storage must be tested separately.
 
-## Wallet and Trezor compatibility
+## Updating and migrating
 
-Provider discovery uses EIP-6963, with a legacy injected-provider fallback. The user selects Rabby or MetaMask explicitly. No RPC URL, API key, WalletConnect relay, blockchain transaction, token approval, or network-based account lookup is needed by the page. It uses `eth_requestAccounts`, `eth_accounts`, `eth_chainId`, `eth_signTypedData_v4`, and, when explicitly selected, `personal_sign`.
+For unchanged recovery keys, a new `vault.age` and signature can reuse the same owner and heirs wrappers. To protect changed bundle contents, generate a new package and receipt using the same heir recipients. The heirs do not need new keys. Every new package gets fresh random cryptographic material, and old released shares are rejected against it.
 
-Trezor Safe 3, 5, and 7 are approached through the account paired in the extension. The page cannot identify or attest the physical device behind a provider. Trezor's Connect API provides typed-data signing, but the extension path determines what the page can request. MetaMask's current documentation specifies `personal_sign` for Trezor hardware accounts; choose **Readable message** for that path. Rabby typed signing is conditional on its installed integration and has not been physically verified here. [MetaMask signing reference](https://docs.metamask.io/metamask-connect/evm/guides/sign-data/). Safe 7 requires a sufficiently recent integration; Trezor documents Connect 9.6.0+ and Suite requirements. No physical Safe 3/5/7 was exercised during this implementation.
+Wallet packages from the initial release are intentionally rejected with a legacy recovery message. Retrieve the exact old tool from commit `cd25eb09a1e025740562b3b3afb3d568e9f07a69`, recover using the original signing setup or use the owner route, then create an age package. No old-wallet functionality is bundled into the current app.
 
-EIP-712 standardizes the signed data, not deterministic signature output. A same-device two-sign check does not establish reproducibility after restoration, firmware changes, or switching wallet implementations. Test with dummy material and a restored/spare account before relying on this design. Retain the original public card and software version details. A key mismatch fails closed and never silently registers a replacement key for an old package.
+## Sources
 
-Contract wallets such as Safe multisigs and EIP-1271 signatures are unsupported. Ethereum EOA signatures and X25519 are classical cryptography. This recovery route is **not post-quantum**, even if the recovered bundle contains an age post-quantum identity.
-
-## Local execution and threat model
-
-`recovery.html` bundles all JavaScript and styles. The production entry point contains no practice provider, wallet generator, embedded sample database, or sample password. Development fixtures live under `developer/wallet-recovery/tests/fixtures/` and are not bundled or served. The build rejects application modules outside the production source allowlist; the release test also checks the generated HTML. There are no runtime CDN dependencies, analytics, remote fetches, browser-storage writes, or application uploads. The CSP allows only the exact inline script/style hashes and disallows network connections. The local server binds 127.0.0.1 and serves only the handbook and recovery tool; it does not serve the folder or accept uploads.
-
-Wallet extensions, Trezor Suite, and operating-system services have independent network behavior. The page does not make a compromised computer or extension trustworthy. Encryption keys derived from a hardware signature exist in the browser's memory; hardware seed isolation does not also keep those derived keys inside the device.
-
-Sensitive byte arrays are overwritten when practical, but immutable signature strings, intermediate copies, browser memory, crash reports, downloaded shares, and OS memory management prevent a guarantee of erasure. Do not interpret “Clear session” as secure deletion of downloads or memory.
-
-Public account proofs, authenticated encryption, strict versions/shapes, size bounds, duplicate detection, account-change checks, and a trusted receipt address mistakes and several tampering cases. They do not constitute a formal security proof or an independent audit of this composition. HKDF applied to a reproducible ECDSA signature is a design choice with additional assumptions beyond the EIP-712 standard. Wallet-signature derivation also concentrates each custodian's backup access under the same wallet recovery material.
-
-Use this as a compatibility and usability rehearsal. Keep Greenbox's existing owner/passphrase route; memory-only owner recovery is not solved by this custodian prototype. Any three custodians can cooperate now, including against the owner's wishes. A new package cannot revoke retained copies of an old one.
-
-## Dependencies and rebuild
-
-Pinned dependencies: ethers 6.17.0, @noble/curves 2.4.0, shamir-secret-sharing 0.0.4; build dependency esbuild 0.28.2. The SSS library has published independent audits; those audits do not cover this application. Browser Web Crypto supplies randomness, SHA-256, HKDF, and AES-GCM.
-
-The existing HTML needs no dependency installation to run. Build and test instructions are in `developer/README.md`. Node.js 20.19.0 or newer is required by the pinned noble-curves package. `developer/wallet-recovery/package-lock.json` records dependency integrity hashes. Installing dependencies requires network access; the tests and build then run locally. The local server does not import node_modules and must be allowed to bind loopback. `developer/checks/wallet-build.json` identifies the built HTML by SHA-256; retain that manifest through a trusted channel if using it to check copies.
-
-## Primary sources
-
-- [EIP-712 specification](https://eips.ethereum.org/EIPS/eip-712) — typed data and domain separation; no deterministic signature guarantee.
-- [EIP-6963 specification](https://eips.ethereum.org/EIPS/eip-6963) — discovery of multiple injected wallets.
-- [Trezor Ethereum typed-data signing](https://connect.trezor.io/9/methods/ethereum/ethereumSignTypedData/) — device API capability; not proof that every extension path supports it.
-- [Rabby and Trezor](https://trezor.io/guides/third-party-wallet-apps/ethereum-evm-apps/rabby-wallet-and-trezor) and [MetaMask and Trezor](https://trezor.io/guides/third-party-wallet-apps/ethereum-evm-apps/metamask-and-trezor) — pairing through third-party wallets.
-- [Trezor Connect](https://trezor.io/guides/trezor-devices/trezor-fundamentals/trezor-connect) — current Safe 7 integration requirements.
-- [Privy Shamir library, source and audit references](https://github.com/privy-io/shamir-secret-sharing) — input validation and integrity remain the caller's responsibility.
-- [RFC 6979](https://www.rfc-editor.org/rfc/rfc6979) — deterministic ECDSA; this is not mandated by EIP-712.
-- [RFC 5869](https://www.rfc-editor.org/rfc/rfc5869) — HKDF extract-and-expand.
+- [age post-quantum keys](https://github.com/FiloSottile/age#post-quantum-keys)
+- [age format specification](https://c2sp.org/age@v1.1.0)
+- [age TypeScript implementation](https://github.com/FiloSottile/typage)
+- [Shamir library and its audit information](https://github.com/privy-io/shamir-secret-sharing)
+- [NIST FIPS 203: ML-KEM](https://csrc.nist.gov/pubs/fips/203/final)

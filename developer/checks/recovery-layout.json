@@ -1,0 +1,92 @@
+[
+  {
+    "width": 320,
+    "scroll": 320,
+    "view": "view-key"
+  },
+  {
+    "width": 320,
+    "scroll": 320,
+    "view": "view-build"
+  },
+  {
+    "width": 320,
+    "scroll": 320,
+    "view": "view-recover"
+  },
+  {
+    "width": 390,
+    "scroll": 390,
+    "view": "view-key"
+  },
+  {
+    "width": 390,
+    "scroll": 390,
+    "view": "view-build"
+  },
+  {
+    "width": 390,
+    "scroll": 390,
+    "view": "view-recover"
+  },
+  {
+    "width": 768,
+    "scroll": 768,
+    "view": "view-key"
+  },
+  {
+    "width": 768,
+    "scroll": 768,
+    "view": "view-build"
+  },
+  {
+    "width": 768,
+    "scroll": 768,
+    "view": "view-recover"
+  },
+  {
+    "width": 1024,
+    "scroll": 1024,
+    "view": "view-key"
+  },
+  {
+    "width": 1024,
+    "scroll": 1024,
+    "view": "view-build"
+  },
+  {
+    "width": 1024,
+    "scroll": 1024,
+    "view": "view-recover"
+  },
+  {
+    "width": 1440,
+    "scroll": 1440,
+    "view": "view-key"
+  },
+  {
+    "width": 1440,
+    "scroll": 1440,
+    "view": "view-build"
+  },
+  {
+    "width": 1440,
+    "scroll": 1440,
+    "view": "view-recover"
+  },
+  {
+    "width": 1920,
+    "scroll": 1920,
+    "view": "view-key"
+  },
+  {
+    "width": 1920,
+    "scroll": 1920,
+    "view": "view-build"
+  },
+  {
+    "width": 1920,
+    "scroll": 1920,
+    "view": "view-recover"
+  }
+]

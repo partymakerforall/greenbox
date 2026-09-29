@@ -49,7 +49,7 @@ for href in parser.links:
     if '!' in fragment: target = fragment.split('!')[0] + '--' + fragment.split('!',1)[1]
     if target not in parser.ids: bad_links.append(href)
 assert not bad_links, bad_links
-expected_diagrams = {'two-routes', 'owner-recovery', 'pack-and-protect', 'cards-and-shares', 'wallet-protocol', 'backup-kit'}
+expected_diagrams = {'two-routes', 'owner-recovery', 'pack-and-protect', 'cards-and-shares', 'age-protocol', 'backup-kit'}
 assert len(parser.images) == 7, 'Replace all seven diagram locations with embedded images'
 assert {item.get('data-diagram-image') for item in parser.images} == expected_diagrams
 for item in parser.images:

@@ -1,6 +1,6 @@
 # Create and verify Greenbox
 
-Current owner setup and wallet/Shamir recovery reference. Follow the steps in order, one command at a time. For the shorter guided version, open the [handbook](../../index.html#owner). Project paths were updated on 25 September 2026.
+Current owner setup and age/Shamir recovery reference. Follow the steps in order, one command at a time. For the shorter guided version, open the [handbook](../../index.html#owner). Updated for age heir keys on 28 September 2026.
 
 ## Understand what you are building first
 
@@ -17,7 +17,7 @@ The owner’s recovery sequence is:
 
 ![Owner recovery](../guide/assets/diagrams/owner-recovery.png)
 
-Step 4 adds the wallet route: any three of five custodians recover the same bundle without your Greenbox phrase. See the [protocol](PROTOCOL.md) for its security and hardware assumptions.
+Step 4 adds the heirs route: any three of five custodians recover the same bundle without your Greenbox phrase. See the [protocol](PROTOCOL.md) for its security assumptions.
 
 Three terms used below:
 
@@ -250,9 +250,9 @@ cmp private/bundle.tar private/owner-check.tar
 
 Step 3 is complete when `owner.age` decrypts successfully and the comparison matches. You have created recovery keys and their password-protected package. You have not yet encrypted the password-manager backup.
 
-## 4. Add the wallet/Shamir custodian route
+## 4. Add the age/Shamir custodian route
 
-For the optional 3-of-5 wallet route, follow the [heirs guide](../../index.html#heirs). Start the local tool in a separate Terminal window using the [startup instructions](../../index.html#help!the-local-tool-will-not-open). Keep this owner Terminal in its working folder. The creator collects reusable public cards; any three custodians can recover in any order.
+For the optional 3-of-5 heirs route, follow the [heirs guide](../../index.html#heirs). Start the local tool in a separate Terminal window using the [startup instructions](../../index.html#help!the-local-tool-will-not-open). Keep this owner Terminal in its working folder. The creator collects reusable public recipients; any three custodians can recover in any order.
 
 Use the following choices when the tutorial asks what to protect:
 
@@ -266,9 +266,9 @@ Use the following choices when the tutorial asks what to protect:
 
 Do not select `owner.age`: doing so would make custodians need your owner passphrase after recovery. Do not select a `.kdbx` if you intend this route to open the complete existing `vault.age`; direct database protection recovers only that database and still requires its own unlock information.
 
-Use your file manager to place the two downloaded JSON files in this workspace's `kit/` folder. Keep the matching pair from the same creation. Public cards can be retained with the recovery materials. Keep the trusted local HTML tool and its guide too. Do not copy `bundle.tar`, raw keys, or released secret shares into the public kit.
+Use your file manager to place the two downloaded JSON files in this workspace's `kit/` folder. Keep the matching pair from the same creation. Public recipient files can be retained with the recovery materials. Keep the trusted local HTML tool and its guide too. Do not copy `bundle.tar`, raw keys, or released secret shares into the public kit.
 
-The creator does not need to connect a wallet to encrypt the bundle. On a future offline setup, bring the **public** cards to the prepared encryption machine and build the package there using the trusted local page. Do not move a real plaintext bundle onto an online computer just to use a browser. Rehearse the browser and tool availability in that offline environment first; this has not been physically tested in Tails.
+The creator does not need to hold any heir private keys to encrypt the bundle. On a future offline setup, bring the **public** recipients to the prepared encryption machine and build the package there using the trusted local page. Do not move a real plaintext bundle onto an online computer just to use a browser. Rehearse the browser and tool availability in that offline environment first; this has not been physically tested in Tails.
 
 A receipt stored beside the package is only a copy. Custodians must have a separately trusted receipt; accepting a replacement package plus its replacement receipt is not creator authentication. Their trusted receipt binds the recovered bundle and therefore the `verify.pub` inside it.
 
@@ -320,18 +320,18 @@ Use verify.pub to check vault.age.minisig against vault.age.
 Only after verification, decrypt vault.age with master.key.
 Extract that archive and read payload/UNLOCK.txt.
 
-WALLET CUSTODIANS (only if the matching JSON files are included):
-Use a trusted copy of the Greenbox wallet recovery page.
+AGE CUSTODIANS (only if the matching JSON files are included):
+Use a trusted copy of the Greenbox age recovery page.
 Load greenbox-package.json and your independently trusted receipt.
-Any three of the five registered accounts can release their shares.
+Any three of the five custodians with their saved age keys can release their shares.
 Combine those secret shares in any order to recover bundle.tar.
 Extract master.key and verify.pub, verify vault.age, then decrypt it.
-This prototype is not independently audited or post-quantum.
+The share encryption uses post-quantum age keys. This integration has not been independently audited.
 Retain the complete recovery guide and trusted HTML tool separately.
 TEXT
 ```
 
-The owner kit has four required files. If you completed the wallet rehearsal in step 4, add its two matching JSON files:
+The owner kit has four required files. If you completed the heirs rehearsal in step 4, add its two matching JSON files:
 
 ![Your encrypted kit](../guide/assets/diagrams/backup-kit.png)
 
@@ -423,9 +423,9 @@ diff -rq private/payload restored/payload
 
 **The final check is opening the recovered KeePass database using only the recovered unlock information.** Inspect the recent entry and attachment recorded in `BACKUP-INFO.txt`. Do not save changes into the recovered test copy before comparing it.
 
-### Then test the wallet custodian path
+### Then test the age custodian path
 
-Use [the custodian recovery guide](../../index.html#recover-heirs). Three custodians load the same package and their independently trusted receipt, sign the saved message, and privately release their individual shares. The recovering person combines them and downloads `bundle.tar`. No owner passphrase is used.
+Use [the custodian recovery guide](../../index.html#recover-heirs). Three custodians load the same package and their independently trusted receipt, load their saved age keys, and privately release their individual shares. The recovering person combines them and downloads `bundle.tar`. No owner passphrase is used.
 
 Back in this Greenbox workspace, make a separate output folder:
 
@@ -463,7 +463,7 @@ tar -xf restored-custodians/payload.tar -C restored-custodians
 
 Open the database under `restored-custodians/payload/` using its recovered `UNLOCK.txt`. During this setup rehearsal, `diff -rq private/payload restored-custodians/payload` should report no differences.
 
-The prototype tests cover all ten groups of three with dummy software wallets. Your actual setup must also prove that each intended custodian can recreate their registered encryption key after wallet restoration and release a valid share. Rehearse the complete path on intended devices before trusting real secrets. Running an authorized recovery exposes the master key to the recovering person; the test is not an inheritance gate or a way to revoke copies afterward.
+The prototype tests cover all ten groups of three with runtime-generated age keys. Your actual setup must also prove that each intended custodian can restore their saved private key and match its public recipient and release a valid share. Rehearse the complete path on intended devices before trusting real secrets. Running an authorized recovery exposes the master key to the recovering person; the test is not an inheritance gate or a way to revoke copies afterward.
 
 ## 7. Make complete copies, then test discovery
 
@@ -474,7 +474,7 @@ Keep these as two separate groups:
 | The complete `kit/`, recovery guide, and verified tool installers | Two USBs stored in separate locations; the complete kit also goes online |
 | Password-protected `private/sign.key` and `private/master.recipient` for future backups | Owner-controlled offline storage; do not put the signing key in the public kit |
 
-Secret contents in the kit are encrypted; its README, receipt, and wallet metadata are public. Another drive password would be another recovery dependency; use one only if its recovery is accounted for.
+Secret contents in the kit are encrypted; its README, receipt, and heirs metadata are public. Another drive password would be another recovery dependency; use one only if its recovery is accounted for.
 
 The page stays local. No upload or ENS setup is part of this prototype. For a later, separately rehearsed online storage route:
 
@@ -488,9 +488,9 @@ Provider selection and account setup have not been performed in this research. T
 
 ## 8. Updates and cleanup
 
-When the password-manager contents change, create a new complete payload with an increased release number. Encrypt and sign it as in step 5. If the recovery bundle and custodians are unchanged, `owner.age` and the wallet package/receipt can accompany a new `vault.age` and signature: they recover the same master key and verification key. If you protected a `.kdbx` directly instead, changing that database requires a new wallet package and receipt. Build the new kit separately, verify it, and publish it before updating ENS or replacing your good USB copies.
+When the password-manager contents change, create a new complete payload with an increased release number. Encrypt and sign it as in step 5. If the recovery bundle and custodians are unchanged, `owner.age` and the heirs package/receipt can accompany a new `vault.age` and signature: they recover the same master key and verification key. If you protected a `.kdbx` directly instead, changing that database requires a new heirs package and receipt. Build the new kit separately, verify it, and publish it before updating ENS or replacing your good USB copies.
 
-Retain each release as a matching kit. A new wallet package always gets its own receipt; deliver that receipt through the trusted route again. Changing the master/signing keys changes `bundle.tar`, so recreate and verify every recovery wrapper. Replacing custodians requires a new package. Reuse the existing public cards for continuing custodians; they do not need to sign or generate new cards for a new backup. **Build a package → Reuse cards from a saved package** can load the existing set. A new wallet account or signing method needs a new card. Old packages and released shares remain usable against retained old contents.
+Retain each release as a matching kit. A new heirs package always gets its own receipt; deliver that receipt through the trusted route again. Changing the master/signing keys changes `bundle.tar`, so recreate and verify every recovery wrapper. Replacing custodians requires a new package. Reuse the existing public recipients for continuing custodians; they do not need to generate new keys for a new backup. **Build a package → Reuse keys from a saved package** can load the existing set. A replaced private age key needs a new public recipient and package. Old packages and released shares remain usable against retained old contents.
 
 At 30 days, test recall of the phrase. At least yearly, rehearse owner and custodian recovery, check each stored copy, and review contacts and expiry dates.
 
@@ -520,4 +520,4 @@ Tails requires compatible x86-64 hardware and does not boot on Apple silicon Mac
 
 During real key creation and decryption, disconnect networking, leave persistent storage locked, avoid mounting internal disks, and work in the prepared memory-backed folder. On generic Linux, ensure disk swap and hibernation are disabled: tmpfs can otherwise write memory pages to swap. Check that the payload and temporary archives fit in the available memory. A live OS cannot make compromised hardware trustworthy. [Linux tmpfs](https://docs.kernel.org/filesystems/tmpfs.html)
 
-These offline notes describe the owner CLI workflow. They do not assert that Rabby, MetaMask, or the Trezor signing flow has been verified in Tails. Only dummy data was used in local command checks. Your actual KeePass database, offline hardware, custodian arrangements, and public retrieval still require the acceptance drill in [Verification](VERIFICATION.md).
+These offline notes describe the owner CLI workflow. The age browser tool and offline hardware still need an end-to-end rehearsal in your chosen Tails or Linux environment. Only dummy data was used in local command checks. Your actual KeePass database, offline hardware, custodian arrangements, and public retrieval still require the acceptance drill in [Verification](VERIFICATION.md).

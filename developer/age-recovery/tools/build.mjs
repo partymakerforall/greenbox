@@ -11,7 +11,7 @@ const bundledModules = [...new Set(Object.values(bundle.metafile.outputs).flatMa
   Object.entries(output.inputs).filter(([,info]) => info.bytesInOutput > 0).map(([name]) =>
     path.relative(root, path.resolve(name)).split(path.sep).join('/'))))];
 const applicationModules = bundledModules.filter(name => !name.split('/').includes('node_modules')).sort();
-const allowed = new Set(['src/app.mjs', 'src/crypto.mjs', 'src/wallet.mjs']);
+const allowed = new Set(['src/app.mjs', 'src/crypto.mjs']);
 if (applicationModules.some(name => !allowed.has(name))) throw new Error('Non-production module in release: ' + applicationModules.filter(name => !allowed.has(name)).join(', '));
 const script = bundle.outputFiles[0].text.replace(/<\/script/gi, '<\\/script');
 const style = await readFile(path.join(root, 'src/style.css'), 'utf8');
@@ -23,5 +23,5 @@ const project = path.resolve(root, '../..');
 const checks = path.resolve(root, '../checks');
 await mkdir(checks, {recursive: true});
 await writeFile(path.join(project, 'recovery.html'), html);
-await writeFile(path.join(checks, 'wallet-build.json'), JSON.stringify({file: 'recovery.html', profile: 'production', applicationModules, bytes: Buffer.byteLength(html), sha256: createHash('sha256').update(html).digest('hex'), externalRuntimeDependencies: 0}, null, 2) + '\n');
+await writeFile(path.join(checks, 'age-build.json'), JSON.stringify({file: 'recovery.html', profile: 'production', applicationModules, bytes: Buffer.byteLength(html), sha256: createHash('sha256').update(html).digest('hex'), externalRuntimeDependencies: 0}, null, 2) + '\n');
 console.log('Built self-contained recovery.html (' + Math.round(Buffer.byteLength(html) / 1024) + ' KiB). No runtime CDN requests.');

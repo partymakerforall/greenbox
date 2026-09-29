@@ -1,7 +1,6 @@
 {
-  "date": "2026-09-28",
-  "command": "npm audit --json",
-  "source": "npm advisory service",
+  "auditReportVersion": 2,
+  "vulnerabilities": {},
   "metadata": {
     "vulnerabilities": {
       "info": 0,
@@ -12,13 +11,12 @@
       "total": 0
     },
     "dependencies": {
-      "prod": 13,
+      "prod": 10,
       "dev": 27,
       "optional": 26,
       "peer": 0,
       "peerOptional": 0,
-      "total": 39
+      "total": 36
     }
-  },
-  "vulnerabilities": {}
+  }
 }
