@@ -308,12 +308,14 @@ step('Encrypt one recovery package', r'''
 On your prepared offline computer, open **Build a package**:
 
 1. **Add public recipient files** — select the five `.recipient` files.
-2. Set **3 of 5**.
+2. Under **Shares needed to recover**, choose **3** for this 3-of-5 example. The tool supports 2–10 heirs; for 6-of-10, load ten recipients and choose **6**.
 3. Enter a backup name and select **`private/bundle.tar`**.
 4. Click **Encrypt recovery package**.
 5. Download the package and receipt into `kit/`.
 
 The tool encrypts the bundle once, splits its encryption key into five shares, and encrypts each share to one custodian. Any three can recover it in any order. You do not create different backups for different combinations.
+
+Recovery reads the required number from the saved package. Changing that number requires creating a new package.
 
 <div class="checkpoint"><strong>Result</strong><p>greenbox-package.json and its matching greenbox-receipt.json.</p></div>
 

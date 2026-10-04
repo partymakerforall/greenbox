@@ -130,6 +130,21 @@ test('threshold endpoints 2-of-2 and 10-of-10 restore binary files',async()=>{
   }
 });
 
+test('6-of-10 requires six distinct shares and recovers in any supplied order',async()=>{
+  const keys=await Promise.all(Array.from({length:10},()=>generateHybridIdentity()));
+  const recipients=await Promise.all(keys.map(async key=>recipientCard(await identityToRecipient(key))));
+  const p=await createPackage({cards:recipients,threshold:6,fileName:'six-of-ten.dat',data});
+  assert.equal(p.package.header.threshold,6);
+  assert.equal(p.package.header.recipients.length,10);
+  const parts=await Promise.all(keys.map(key=>openShare(p.package,p.receipt,key)));
+  const order=[9,1,7,0,5,3].map(i=>parts[i]);
+  await assert.rejects(recoverFile(p.package,p.receipt,order.slice(0,5)),/at least 6/);
+  await assert.rejects(recoverFile(p.package,p.receipt,[...order.slice(0,5),order[0]]),/Duplicate/);
+  assert.deepEqual((await recoverFile(p.package,p.receipt,order)).data,data);
+  assert.deepEqual((await recoverFile(p.package,p.receipt,order.reverse())).data,data);
+  assert.deepEqual((await recoverFile(p.package,p.receipt,parts.reverse())).data,data);
+});
+
 test('the advertised 32 MiB file size round-trips without parser failure',async()=>{
   const large=new Uint8Array(32*1024*1024);large[0]=255;large[large.length-1]=127;
   const p=await createPackage({cards:cards.slice(0,2),threshold:2,fileName:'large.dat',data:large});

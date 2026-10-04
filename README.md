@@ -8,7 +8,7 @@ Your passphrase recovers the keys that open your backup. The optional heirs rout
 
 ## Download and open
 
-Get **greenbox-v2.1.0.html** from [GitHub Releases](https://github.com/partymakerforall/greenbox/releases/latest). It contains the full handbook, diagrams, and recovery tool. Open the file directly in your browser; it works offline and needs no local server.
+Get **greenbox-v2.1.1.html** from [GitHub Releases](https://github.com/partymakerforall/greenbox/releases/latest). It contains the full handbook, diagrams, and recovery tool. Open the file directly in your browser; it works offline and needs no local server.
 
 Keep this versioned file with your recovery materials. `SHA256SUMS` on the release page lets you check the downloaded bytes. On a Mac, put both files in the same folder and run:
 

@@ -5,7 +5,7 @@
     "src/app.mjs",
     "src/crypto.mjs"
   ],
-  "bytes": 195547,
-  "sha256": "73e57f08a5f6f584e73fc2fd2737ad3ca8a60f133e5fd05d164d92d45fcb5192",
+  "bytes": 195934,
+  "sha256": "95755b12fd1d5918c87779b60263f80f1cf8bb4d6ba2ce0825554d16d25e1cd9",
   "externalRuntimeDependencies": 0
 }

@@ -22,8 +22,8 @@ function render() {
   el('check-identity').disabled=state.busy||!state.checkCard;
   rows('custodian-list',state.cards,'No public keys added yet.',i=>{state.cards.splice(i,1);state.built=null;});
   const threshold=Number(el('threshold').value),count=state.cards.length;
-  el('total-custodians').textContent=count;dots('threshold-dots',count||5,Math.min(threshold,count));
-  el('build-rule-title').textContent='Any '+threshold+'. Any order.';
+  el('total-custodians').textContent=count;dots('threshold-dots',count,Math.min(threshold,count));
+  el('build-rule-title').textContent=count>=threshold?'Any '+threshold+' of '+count+' heirs.':'Choose your recovery rule.';
   el('threshold-description').textContent=count>=threshold?'Any '+threshold+' of these '+count+' heirs can recover, in any order.':'Add '+Math.max(0,threshold-count)+' more public recipient file(s).';
   el('payload-detail').textContent=state.payload?state.payload.name+' · '+state.payload.data.length.toLocaleString()+' bytes':'Your KeePass database or Greenbox bundle.tar.';
   el('encrypt-package').disabled=state.busy||count<threshold||!state.payload;
@@ -36,9 +36,10 @@ function render() {
   if(selected && Number(selected)<(state.package?.header.recipients.length||0))el('share-recipient').value=selected;
   el('contribution-result').hidden=!state.contribution;
   rows('contribution-list',state.contributions,'No shares collected yet.',i=>{state.contributions.splice(i,1);forgetRecovered();});
-  const needed=state.package?.header.threshold||3;
-  el('share-count').textContent=state.contributions.length;el('shares-needed').textContent=needed;dots('recovery-dots',state.package?.header.recipients.length||5,state.contributions.length);
-  el('recovery-progress').textContent=!state.package?'Load a package to begin.':state.contributions.length>=needed?'Enough shares collected. You can recover the file.':'Collect '+(needed-state.contributions.length)+' more different share(s).';
+  const needed=state.package?.header.threshold,total=state.package?.header.recipients.length||0;
+  el('share-count').textContent=state.contributions.length;el('shares-needed').textContent=needed??'—';dots('recovery-dots',total,state.contributions.length);
+  el('recovery-rule').textContent=state.package?'This backup needs any '+needed+' of '+total+' heirs. The requirement was set when the backup was created.':'Load a package to see how many shares it needs.';
+  el('recovery-progress').textContent=!state.package?'':state.contributions.length>=needed?'Enough shares collected. You can recover the file.':'Collect '+(needed-state.contributions.length)+' more different share(s).';
   el('recover-file').disabled=state.busy||!ready||state.contributions.length<needed;
   el('recovered-result').hidden=!state.recovered;
   if(state.recovered){el('recovered-name').textContent=state.recovered.fileName;el('recovered-help').textContent='Open the downloaded file with its usual application. KeePass still needs its database password.';}

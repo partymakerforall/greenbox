@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-04",
+  "version": "2.1.1",
+  "browser": "Chrome/154.0.8037.93",
+  "headless": true,
+  "automatedTestsPassed": 27,
+  "emptyRecoveryRequirement": "unknown; no assumed threshold or heir count",
+  "createdThroughBrowser": {"required": 6, "total": 10},
+  "recoveryShareOrder": [10, 2, 8, 1, 6, 4],
+  "fiveSharesKeepRecoveryDisabled": true,
+  "sixSharesEnableRecovery": true,
+  "recoveredKeePassMatchesOriginalBytes": true,
+  "recoveredKeePassOpensInKeePassXC": true,
+  "builderChoiceDoesNotOverrideLoadedPackage": true,
+  "switchToTwoOfTwoResetsProgress": true,
+  "invalidPackageClearsDisplayedRequirement": true,
+  "layoutWidths": [320, 390, 768, 1024, 1440, 1920],
+  "layoutViewsPerWidth": 3,
+  "layoutOverflowFailures": 0,
+  "independentSecurityAudit": false
+}
